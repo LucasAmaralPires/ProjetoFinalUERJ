@@ -1,10 +1,12 @@
 #include <SPI.h>
 #include <MFRC522.h>
-#define red 14
-#define blue 16
-#define green 15
+#include <LiquidCrystal.h>
+#define red 45
+#define blue 47
+#define green 46
 #define SS_PIN 10
 #define RST_PIN 9
+LiquidCrystal lcd(48, 49, 50, 51, 52, 53);
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
   
 char st[20];
@@ -14,6 +16,7 @@ long old_time, new_time;
 
 void setup() 
 {
+  lcd.begin(16, 2);
   cont_di = 0;
   pinMode(red,OUTPUT);
   pinMode(blue,OUTPUT);
@@ -27,7 +30,6 @@ void setup()
   pinMode(7, INPUT);
   pinMode(2, INPUT);
   pinMode(8, INPUT);
-  SPI.begin();      // Inicia  SPI bus
   mfrc522.PCD_Init();   // Inicia MFRC522
   Serial.begin(9600);
   digitalWrite(red, HIGH);  
@@ -40,11 +42,11 @@ void loop()
     new_time = millis();
     for (int ti = 3; ti<7; ti++)
     {
+      SPI.begin();      // Inicia  SPI bus
       if (mfrc522.PICC_IsNewCardPresent()) 
       {
         if (mfrc522.PICC_ReadCardSerial()) 
         {
-//          Serial.println();
           String conteudo= "";
           byte letra;
           for (byte i = 0; i < mfrc522.uid.size; i++) 
@@ -58,6 +60,7 @@ void loop()
         }
         delay(1000);
       }
+      SPI.end();
       //Alterna o estado dos pinos das linhas
       digitalWrite(3, LOW);
       digitalWrite(4, LOW);
@@ -97,6 +100,11 @@ void loop()
       }
       if(rec == 2)
       {
+        lcd.clear();
+        lcd.setCursor(5, 0);
+        lcd.print("ACESSO");
+        lcd.setCursor(4, 1);
+        lcd.print("LIBERADO");
         digitalWrite(red, LOW);
         digitalWrite(green, HIGH);
         digitalWrite(blue, LOW);
@@ -104,12 +112,22 @@ void loop()
       }
       if(rec == 3)
       {
+        lcd.clear();
+        lcd.setCursor(6, 0);
+        lcd.print("MODO");
+        lcd.setCursor(4, 1);
+        lcd.print("PROFESSOR");
         digitalWrite(red, LOW);
         digitalWrite(green, LOW);
         digitalWrite(blue, HIGH);
       }
       if(rec == 4)
-      {
+      {        
+        lcd.clear();
+        lcd.setCursor(6, 0);
+        lcd.print("DADO");
+        lcd.setCursor(5, 1);
+        lcd.print("ACEITO");
         digitalWrite(red, LOW);
         digitalWrite(green, HIGH);
         digitalWrite(blue, LOW);
@@ -117,6 +135,7 @@ void loop()
         digitalWrite(red, LOW);
         digitalWrite(green, LOW);
         digitalWrite(blue, HIGH);
+        lcd.clear();
       }
     }
     if((!digitalRead(red)) && (digitalRead(green)) && ((new_time - old_time)>5000))
@@ -124,6 +143,7 @@ void loop()
       digitalWrite(red,HIGH);
       digitalWrite(green,LOW); 
     }
+    if(digitalRead(red)) lcd.clear();
 }
 
 void imprime_linha_coluna(int x, int y)
