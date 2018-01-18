@@ -111,7 +111,7 @@ public class SerialTest implements SerialPortEventListener
 			{
 				String inputLine=input.readLine();
 				System.out.println(inputLine);
-				if(edicao == true)
+				if(edit == true)
 				{
 					Teacher(inputLine);
 				}
@@ -123,26 +123,26 @@ public class SerialTest implements SerialPortEventListener
 		}
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
-	private boolean jaProf = false;
+	private boolean alreadyTeacher = false;
 	private boolean isAdd = false;
-	private String num_cartao_add;
+	private String numCardAdd;
 	public void Teacher(String st)
 	{
-		boolean resposta = false;
+		boolean answer = false;
 		try
 		{
-			if(jaProf == false)
+			if(alreadyTeacher == false)
 			{
 				String query = "Select * from Pessoa where nCartao = '" + st + "' and isProf = 1;";
-				resposta = executeSQL(query);
-				if(resposta == true)
+				answer = executeSQL(query);
+				if(answer == true)
 				{
 					output.write(4);
-					jaProf = true;
+					alreadyTeacher = true;
 				}
 				else
 				{
-					edicao = false;
+					edit = false;
 					output.write(1);
 				}
 			}
@@ -151,29 +151,29 @@ public class SerialTest implements SerialPortEventListener
 				if(isAdd == false)
 				{
 					String query = "Select * from Pessoa where nCartao = '" + st + "';";
-					resposta = executeSQL(query);
-					if(resposta == true)
+					answer = executeSQL(query);
+					if(answer == true)
 					{
 						String query2 = "Delete from pessoa where nCartao = '" + st + "';";
 						executeSQLUpdate(query2);
-						edicao = false;
-						jaProf = false;
+						edit = false;
+						alreadyTeacher = false;
 						output.write(1);
 					}
 					else
 					{
-						num_cartao_add = st;
+						numCardAdd = st;
 						isAdd = true;
 						output.write(4);
 					}
 				}
 				else
 				{
-					String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + st + "', '" + num_cartao_add + "', false);";
+					String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + st + "', '" + numCardAdd + "', false);";
 					executeSQLUpdate(query);
 					isAdd = false;
-					edicao = false;
-					jaProf = false;
+					edit = false;
+					alreadyTeacher = false;
 				}
 			}
 		}
@@ -203,14 +203,14 @@ public class SerialTest implements SerialPortEventListener
     	stat.close();
     	conn.close();
     }
-	private boolean edicao = false;
+	private boolean edit = false;
 	public int SearchStudent (String st)
 	{
 		if(Objects.equals("!", st))
 		{
 			try
 			{
-				if(!edicao)
+				if(!edit)
 				{
 					output.write(3);
 				}
@@ -218,25 +218,25 @@ public class SerialTest implements SerialPortEventListener
 				{
 					output.write(1);
 				}
-				edicao = !edicao;
+				edit = !edit;
 			}
 			catch (Exception e)
 			{
 		//		System.err.println(e.toString());
 			}
 		}
-		else if(edicao == true)
+		else if(edit == true)
 		{
 			
 		}
 		else
 		{
-			boolean resposta = false;
+			boolean answer = false;
 			String query = "Select * from Pessoa where matricula = '" + st + "' or nCartao = '" + st + "';";
 			try
 			{
-				resposta = executeSQL(query);
-				if(resposta == true)
+				answer = executeSQL(query);
+				if(answer == true)
 				{
 					output.write(2);
 				}
