@@ -4,8 +4,8 @@
 #define red 45
 #define blue 47
 #define green 46
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN 53
+#define RST_PIN 38
 LiquidCrystal lcd(48, 49, 50, 51, 52, 53);
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
   
