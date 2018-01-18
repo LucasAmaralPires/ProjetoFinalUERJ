@@ -113,9 +113,9 @@ public class SerialTest implements SerialPortEventListener
 				System.out.println(inputLine);
 				if(edicao == true)
 				{
-					Professor(inputLine);
+					Teacher(inputLine);
 				}
-				BuscarAluno(inputLine);
+				SearchStudent(inputLine);
 //				output.write(1);
 			} catch (Exception e) {
 //				System.err.println(e.toString());
@@ -126,7 +126,7 @@ public class SerialTest implements SerialPortEventListener
 	private boolean jaProf = false;
 	private boolean isAdd = false;
 	private String num_cartao_add;
-	public void Professor(String st)
+	public void Teacher(String st)
 	{
 		boolean resposta = false;
 		try
@@ -134,7 +134,7 @@ public class SerialTest implements SerialPortEventListener
 			if(jaProf == false)
 			{
 				String query = "Select * from Pessoa where nCartao = '" + st + "' and isProf = 1;";
-				resposta = executarSQL(query);
+				resposta = executeSQL(query);
 				if(resposta == true)
 				{
 					output.write(4);
@@ -151,11 +151,11 @@ public class SerialTest implements SerialPortEventListener
 				if(isAdd == false)
 				{
 					String query = "Select * from Pessoa where nCartao = '" + st + "';";
-					resposta = executarSQL(query);
+					resposta = executeSQL(query);
 					if(resposta == true)
 					{
 						String query2 = "Delete from pessoa where nCartao = '" + st + "';";
-						executarSQLUpdate(query2);
+						executeSQLUpdate(query2);
 						edicao = false;
 						jaProf = false;
 						output.write(1);
@@ -170,7 +170,7 @@ public class SerialTest implements SerialPortEventListener
 				else
 				{
 					String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + st + "', '" + num_cartao_add + "', false);";
-					executarSQLUpdate(query);
+					executeSQLUpdate(query);
 					isAdd = false;
 					edicao = false;
 					jaProf = false;
@@ -183,7 +183,7 @@ public class SerialTest implements SerialPortEventListener
 		}		
 	}
 	
-    private static boolean executarSQL(String sql) throws Exception
+    private static boolean executeSQL(String sql) throws Exception
     {
 		boolean r;
     	ResultSet rs = null;
@@ -195,7 +195,7 @@ public class SerialTest implements SerialPortEventListener
     	conn.close();
     	return r;
     }
-    private static void executarSQLUpdate(String sql) throws Exception
+    private static void executeSQLUpdate(String sql) throws Exception
     {
 		Connection conn=Conn.openConn();
 	    Statement stat=conn.createStatement();
@@ -204,7 +204,7 @@ public class SerialTest implements SerialPortEventListener
     	conn.close();
     }
 	private boolean edicao = false;
-	public int BuscarAluno (String st)
+	public int SearchStudent (String st)
 	{
 		if(Objects.equals("!", st))
 		{
@@ -235,7 +235,7 @@ public class SerialTest implements SerialPortEventListener
 			String query = "Select * from Pessoa where matricula = '" + st + "' or nCartao = '" + st + "';";
 			try
 			{
-				resposta = executarSQL(query);
+				resposta = executeSQL(query);
 				if(resposta == true)
 				{
 					output.write(2);
@@ -255,8 +255,6 @@ public class SerialTest implements SerialPortEventListener
 	
 	public static void main(String[] args) throws Exception
 	{
-//		Connection c=Conexao.abrirConexao();
-//		System.out.println(c);
 		SerialTest main = new SerialTest();
 		main.initialize();
 		Thread t=new Thread() 
