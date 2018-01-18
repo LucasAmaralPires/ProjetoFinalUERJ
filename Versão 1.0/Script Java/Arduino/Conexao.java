@@ -12,7 +12,7 @@ public class Conexao
     private static final String USUARIO = "root";
     private static final String SENHA = "root";
     
-    private static final Connection Conexao=abrirConexao();
+    private static final Connection Conexao = abrirConexao();
 
     public static Connection getConexao() {
         return Conexao;
