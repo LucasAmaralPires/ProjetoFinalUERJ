@@ -154,7 +154,7 @@ public class SerialTest implements SerialPortEventListener
 					answer = executeSQL(query);
 					if(answer == true)
 					{
-						String query2 = "Delete from pessoa where nCartao = '" + st + "';";
+						String query2 = "Delete from pessoa where nCartao = '" + st + "' and isProf = 0;";
 						executeSQLUpdate(query2);
 						edit = false;
 						alreadyTeacher = false;
