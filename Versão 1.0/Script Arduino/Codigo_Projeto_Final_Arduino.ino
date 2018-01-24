@@ -1,4 +1,4 @@
-#include <SPI.h>
+﻿#include <SPI.h>
 #include <MFRC522.h>
 #include <LiquidCrystal.h>
 #define red 45
@@ -13,11 +13,14 @@ char st[20];
 char digt[15];
 int cont_di;
 long old_time, new_time;
+bool ins_cartao,dig_mat;
 
 void setup() 
 {
   lcd.begin(16, 2);
   cont_di = 0;
+  ins_cartao = false;
+  dig_mat = false;
   pinMode(red,OUTPUT);
   pinMode(blue,OUTPUT);
   pinMode(green,OUTPUT);
@@ -42,50 +45,56 @@ void loop()
     new_time = millis();
     for (int ti = 3; ti<7; ti++)
     {
-      SPI.begin();      // Inicia  SPI bus
-      if (mfrc522.PICC_IsNewCardPresent()) 
+      if(dig_mat == false)
       {
-        if (mfrc522.PICC_ReadCardSerial()) 
+        SPI.begin();      // Inicia  SPI bus
+        if (mfrc522.PICC_IsNewCardPresent()) 
         {
-          String conteudo= "";
-          byte letra;
-          for (byte i = 0; i < mfrc522.uid.size; i++) 
+          if (mfrc522.PICC_ReadCardSerial()) 
           {
-            Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
-            Serial.print(mfrc522.uid.uidByte[i], HEX);
-            conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : ""));
-            conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
+            String conteudo= "";
+            byte letra;
+            for (byte i = 0; i < mfrc522.uid.size; i++) 
+            {
+              Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
+              Serial.print(mfrc522.uid.uidByte[i], HEX);
+              conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : ""));
+              conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
+            }
+            Serial.println();
           }
-          Serial.println();
+          delay(1000);
         }
-        delay(1000);
-      }
-      SPI.end();
-      //Alterna o estado dos pinos das linhas
-      digitalWrite(3, LOW);
-      digitalWrite(4, LOW);
-      digitalWrite(5, LOW);
-      digitalWrite(6, LOW);
-      digitalWrite(ti, HIGH);
-      //Verifica se alguma tecla da coluna 1 foi pressionada
-      if (digitalRead(7) == HIGH)
+        SPI.end();
+      }  
+      if(ins_cartao == false)
       {
-        imprime_linha_coluna(ti-2, 1);
-        while(digitalRead(7) == HIGH){}
-      }
-  
-      //Verifica se alguma tecla da coluna 2 foi pressionada    
-      if (digitalRead(2) == HIGH)
-      {
-        imprime_linha_coluna(ti-2, 2);
-        while(digitalRead(2) == HIGH){};
-      }
-     
-      //Verifica se alguma tecla da coluna 3 foi pressionada
-      if (digitalRead(8) == HIGH)
-      {
-        imprime_linha_coluna(ti-2, 3);
-        while(digitalRead(8) == HIGH){}
+        //Alterna o estado dos pinos das linhas
+        digitalWrite(3, LOW);
+        digitalWrite(4, LOW);
+        digitalWrite(5, LOW);
+        digitalWrite(6, LOW);
+        digitalWrite(ti, HIGH);
+        //Verifica se alguma tecla da coluna 1 foi pressionada
+        if (digitalRead(7) == HIGH)
+        {
+          imprime_linha_coluna(ti-2, 1);
+          while(digitalRead(7) == HIGH){}
+        }
+    
+        //Verifica se alguma tecla da coluna 2 foi pressionada    
+        if (digitalRead(2) == HIGH)
+        {
+          imprime_linha_coluna(ti-2, 2);
+          while(digitalRead(2) == HIGH){};
+        }
+       
+        //Verifica se alguma tecla da coluna 3 foi pressionada
+        if (digitalRead(8) == HIGH)
+        {
+          imprime_linha_coluna(ti-2, 3);
+          while(digitalRead(8) == HIGH){}
+        }
       }   
     }
     delay(10);
@@ -125,13 +134,65 @@ void loop()
       {        
         lcd.clear();
         lcd.setCursor(6, 0);
-        lcd.print("DADO");
+        lcd.print("CARTAO");
         lcd.setCursor(5, 1);
-        lcd.print("ACEITO");
+        lcd.print("INSERIDO");
         digitalWrite(red, LOW);
         digitalWrite(green, HIGH);
         digitalWrite(blue, LOW);
-        delay(500);        
+        delay(2000);        
+        digitalWrite(red, LOW);
+        digitalWrite(green, LOW);
+        digitalWrite(blue, HIGH);
+        ins_cartao = false;
+        dig_mat = true;
+        lcd.clear();
+      }
+      if(rec == 5)
+      {        
+        lcd.clear();
+        lcd.setCursor(6, 0);
+        lcd.print("ALUNO");
+        lcd.setCursor(5, 1);
+        lcd.print("APAGADO");
+        digitalWrite(red, LOW);
+        digitalWrite(green, HIGH);
+        digitalWrite(blue, LOW);
+        delay(2000);        
+        digitalWrite(red, HIGH);
+        digitalWrite(green, LOW);
+        digitalWrite(blue, LOW);
+        lcd.clear();
+      }      
+      if(rec == 6)
+      {        
+        lcd.clear();
+        lcd.setCursor(6, 0);
+        lcd.print("ALUNO");
+        lcd.setCursor(5, 1);
+        lcd.print("INSERIDO");
+        digitalWrite(red, LOW);
+        digitalWrite(green, HIGH);
+        digitalWrite(blue, LOW);
+        delay(2000);        
+        digitalWrite(red, HIGH);
+        digitalWrite(green, LOW);
+        digitalWrite(blue, LOW);
+        dig_mat = false;
+        lcd.clear();
+      }
+      if(rec == 7)
+      {        
+        lcd.clear();
+        ins_cartao = true;
+        lcd.setCursor(3, 0);
+        lcd.print("PROFESSOR");
+        lcd.setCursor(3, 1);
+        lcd.print("CONFIRMADO");
+        digitalWrite(red, LOW);
+        digitalWrite(green, HIGH);
+        digitalWrite(blue, LOW);
+        delay(2000);        
         digitalWrite(red, LOW);
         digitalWrite(green, LOW);
         digitalWrite(blue, HIGH);
@@ -143,7 +204,12 @@ void loop()
       digitalWrite(red,HIGH);
       digitalWrite(green,LOW); 
     }
-    if(digitalRead(red)) lcd.clear();
+    if(digitalRead(red))
+    {
+      ins_cartao = false;
+      dig_mat = false;
+      lcd.clear();
+    }
 }
 
 void imprime_linha_coluna(int x, int y)

@@ -115,7 +115,7 @@ public class SerialTest implements SerialPortEventListener
 				{
 					Teacher(inputLine);
 				}
-				SearchStudent(inputLine);
+				else SearchStudent(inputLine);
 //				output.write(1);
 			} catch (Exception e) {
 //				System.err.println(e.toString());
@@ -137,7 +137,7 @@ public class SerialTest implements SerialPortEventListener
 				answer = executeSQL(query);
 				if(answer == true)
 				{
-					output.write(4);
+					output.write(7);
 					alreadyTeacher = true;
 				}
 				else
@@ -158,7 +158,7 @@ public class SerialTest implements SerialPortEventListener
 						executeSQLUpdate(query2);
 						edit = false;
 						alreadyTeacher = false;
-						output.write(1);
+						output.write(5);
 					}
 					else
 					{
@@ -171,6 +171,7 @@ public class SerialTest implements SerialPortEventListener
 				{
 					String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + st + "', '" + numCardAdd + "', false);";
 					executeSQLUpdate(query);
+					output.write(6);
 					isAdd = false;
 					edit = false;
 					alreadyTeacher = false;
