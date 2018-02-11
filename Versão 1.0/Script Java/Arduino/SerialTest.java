@@ -18,12 +18,26 @@ public class SerialTest implements SerialPortEventListener
 {
 	SerialPort serialPort;
         /** The port we're normally going to use. */
+	private final int STANDARD_MODE = 1;
+	private final int ACESS_GRANTED = 2;
+	private final int TEACHER_MODE = 3;
+	private final int CARD_ACCEPTED = 4;
+	private final int STUDENT_ERASED = 5;
+	private final int STUDENT_INSERTED = 6;
+	private final int TEACHER_CONFIRMED = 7;
+	
+	private boolean alreadyTeacher = false; //Verify if is Teacher in Teacher Mode
+	private boolean isAdd = false; //Check if is adding a new entry in Teacher Mode.
+	private boolean edit = false; //Check Teacher Mode
+
+	private String numCardAdd;
 	private static final String PORT_NAMES[] = 
 	{ 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
                         "/dev/ttyACM0", // Raspberry Pi
 			"/dev/ttyUSB0", // Linux
-			"COM3", // Windows
+			"COM3", 
+			"COM4", // Windows
 	};
 	/**
 	* A BufferedReader which will be fed by a InputStreamReader 
@@ -61,7 +75,6 @@ public class SerialTest implements SerialPortEventListener
 			System.out.println("Could not find COM port.");
 			return;
 		}
-//		System.out.println("AQUI.");
 		try 
 		{
 			// open serial port, and use class name for the appName.
@@ -88,19 +101,6 @@ public class SerialTest implements SerialPortEventListener
 	}
 
 	/**
-	 * This should be called when you stop using the port.
-	 * This will prevent port locking on platforms like Linux.
-	 */
-	public synchronized void close() 
-	{
-		if (serialPort != null) 
-		{
-			serialPort.removeEventListener();
-			serialPort.close();
-		}
-	}
-
-	/**
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
 	public synchronized void serialEvent(SerialPortEvent oEvent) 
@@ -111,90 +111,128 @@ public class SerialTest implements SerialPortEventListener
 			{
 				String inputLine=input.readLine();
 				System.out.println(inputLine);
-				if(edit == true)
-				{
-					Teacher(inputLine);
-				}
-				else SearchStudent(inputLine);
-//				output.write(1);
-			} catch (Exception e) {
+				if(edit == true) 
+					TeacherMode(inputLine);
+				else 
+					ReceiveInitialInput(inputLine);
+			} 
+			catch (Exception e) 
+			{
+				System.out.println("Couldn't read input.");
 //				System.err.println(e.toString());
 			}
 		}
-		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
-	private boolean alreadyTeacher = false;
-	private boolean isAdd = false;
-	private String numCardAdd;
-	public void Teacher(String st)
+	
+	public int ReceiveInitialInput (String input) throws Exception
 	{
-		boolean answer = false;
-		try
+		System.out.println("Entering ReceiveInitialInput");
+		if(Objects.equals("!", input))
 		{
-			if(alreadyTeacher == false)
+			//Enter/Exit Teacher Mode
+			if(!edit)
 			{
-				String query = "Select * from Pessoa where nCartao = '" + st + "' and isProf = 1;";
+				SendMsgArduino(TEACHER_MODE);
+			}
+			else
+			{
+				SendMsgArduino(STANDARD_MODE);
+			}
+			edit = !edit;
+		}
+		else if(edit == true){}
+		else
+		{
+			//Check if Input is in DB
+			boolean answer = false;
+			String query = "Select * from Pessoa where matricula = '" + input + "' or nCartao = '" + input + "';";
+			answer = executeSQL(query);
+			if(answer == true)
+			{
+				SendMsgArduino(ACESS_GRANTED);
+			}
+			else
+			{
+				SendMsgArduino(STANDARD_MODE);
+			}
+		}
+		return 0;
+	}
+	
+	public void TeacherMode(String input) throws Exception
+	{
+		System.out.println("Entering TeacherMode.");
+		boolean answer = false;
+		if(alreadyTeacher == false)
+		{
+			//Check if input is a Teacher in Teacher Mode
+			String query = "Select * from Pessoa where nCartao = '" + input + "' and isProf = 1;";
+			answer = executeSQL(query);
+			if(answer == true)
+			{
+				SendMsgArduino(TEACHER_CONFIRMED);
+				alreadyTeacher = true;
+			}
+			else
+			{
+				edit = false;
+				SendMsgArduino(STANDARD_MODE);
+			}
+		}
+		else
+		{
+			//After validating Teacher actions
+			if(isAdd == false)
+			{
+				//Check new input to add or delete an entry.
+				String query = "Select * from Pessoa where nCartao = '" + input + "';";
 				answer = executeSQL(query);
 				if(answer == true)
 				{
-					output.write(7);
-					alreadyTeacher = true;
+					//It`s an existing entry. Deleting. 
+					String query2 = "Delete from pessoa where nCartao = '" + input + "' and isProf = 0;";
+					executeSQLUpdate(query2);
+					edit = false;
+					alreadyTeacher = false;
+					SendMsgArduino(STUDENT_ERASED);
 				}
 				else
 				{
-					edit = false;
-					output.write(1);
+					//It`s a new entry. Proceed to Add Student.
+					numCardAdd = input;
+					isAdd = true;
+					SendMsgArduino(CARD_ACCEPTED);
 				}
 			}
 			else
 			{
-				if(isAdd == false)
-				{
-					String query = "Select * from Pessoa where nCartao = '" + st + "';";
-					answer = executeSQL(query);
-					if(answer == true)
-					{
-						String query2 = "Delete from pessoa where nCartao = '" + st + "' and isProf = 0;";
-						executeSQLUpdate(query2);
-						edit = false;
-						alreadyTeacher = false;
-						output.write(5);
-					}
-					else
-					{
-						numCardAdd = st;
-						isAdd = true;
-						output.write(4);
-					}
-				}
-				else
-				{
-					String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + st + "', '" + numCardAdd + "', false);";
-					executeSQLUpdate(query);
-					output.write(6);
-					isAdd = false;
-					edit = false;
-					alreadyTeacher = false;
-				}
+				//Insert new Entry.
+				String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + input + "', '" + numCardAdd + "', false);";
+				executeSQLUpdate(query);
+				SendMsgArduino(STUDENT_INSERTED);
+				isAdd = false;
+				edit = false;
+				alreadyTeacher = false;
 			}
 		}
-		catch(Exception e)
-		{
-	//		System.err.println(e.toString());
-		}		
 	}
 	
     private static boolean executeSQL(String sql) throws Exception
     {
-		boolean r;
-    	ResultSet rs = null;
-		Connection conn=Conn.openConn();
-	    Statement stat=conn.createStatement();
-	    rs=stat.executeQuery(sql);
-	    r = rs.first();
-    	stat.close();
-    	conn.close();
-    	return r;
+    	try{
+    		boolean r;
+    		ResultSet rs = null;
+    		Connection conn=Conn.openConn();
+    		Statement stat=conn.createStatement();
+    		rs=stat.executeQuery(sql);
+    		r = rs.first();
+    		stat.close();
+    		conn.close();
+    		return r;    		
+    	}catch(Exception e){
+    		System.out.println("Couldn't connect to DB.");
+    	}
+    	return false;
     }
     private static void executeSQLUpdate(String sql) throws Exception
     {
@@ -204,54 +242,22 @@ public class SerialTest implements SerialPortEventListener
     	stat.close();
     	conn.close();
     }
-	private boolean edit = false;
-	public int SearchStudent (String st)
+  
+    private void SendMsgArduino (int cod)
 	{
-		if(Objects.equals("!", st))
+		try
 		{
-			try
-			{
-				if(!edit)
-				{
-					output.write(3);
-				}
-				else
-				{
-					output.write(1);
-				}
-				edit = !edit;
-			}
-			catch (Exception e)
-			{
-		//		System.err.println(e.toString());
-			}
+			output.write(cod);
 		}
-		else if(edit == true)
+		catch(Exception e){};
+	}
+	public synchronized void close() 
+	{
+		if (serialPort != null) 
 		{
-			
+			serialPort.removeEventListener();
+			serialPort.close();
 		}
-		else
-		{
-			boolean answer = false;
-			String query = "Select * from Pessoa where matricula = '" + st + "' or nCartao = '" + st + "';";
-			try
-			{
-				answer = executeSQL(query);
-				if(answer == true)
-				{
-					output.write(2);
-				}
-				else
-				{
-					output.write(1);
-				}
-			}
-			catch(Exception e)
-			{
-			//	System.err.println(e.toString());
-			}
-		}
-		return 0;
 	}
 	
 	public static void main(String[] args) throws Exception
