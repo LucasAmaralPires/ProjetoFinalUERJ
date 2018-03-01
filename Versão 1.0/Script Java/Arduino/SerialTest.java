@@ -29,6 +29,7 @@ public class SerialTest implements SerialPortEventListener
 	private boolean alreadyTeacher = false; //Verify if is Teacher in Teacher Mode
 	private boolean isAdd = false; //Check if is adding a new entry in Teacher Mode.
 	private boolean edit = false; //Check Teacher Mode
+	private String auditProfessor = ""; //This is for Audit when The Professor adds or deletes someone.
 
 	private String numCardAdd;
 	private static final String PORT_NAMES[] = 
@@ -52,6 +53,7 @@ public class SerialTest implements SerialPortEventListener
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
 
+	@SuppressWarnings("rawtypes")
 	public void initialize() 
 	{
 		CommPortIdentifier portId = null;
@@ -126,7 +128,6 @@ public class SerialTest implements SerialPortEventListener
 	
 	public int ReceiveInitialInput (String input) throws Exception
 	{
-		System.out.println("Entering ReceiveInitialInput");
 		if(Objects.equals("!", input))
 		{
 			//Enter/Exit Teacher Mode
@@ -144,16 +145,21 @@ public class SerialTest implements SerialPortEventListener
 		else
 		{
 			//Check if Input is in DB
-			boolean answer = false;
-			String query = "Select * from Pessoa where matricula = '" + input + "' or nCartao = '" + input + "';";
-			answer = executeSQL(query);
-			if(answer == true)
-			{
-				SendMsgArduino(ACESS_GRANTED);
-			}
-			else
-			{
-				SendMsgArduino(STANDARD_MODE);
+			if(input.length() > 20 || input.length() == 0) {
+				System.out.println("Empty input or Large input.");
+			}else {
+				boolean answer = false;
+				String query = "Select * from Pessoa where matricula = '" + input + "' or nCartao = '" + input + "';";
+				answer = executeSQL(query);
+				if(answer == true)
+				{
+					sendAudit(input, "accessGranted", null);
+					SendMsgArduino(ACESS_GRANTED);
+				}
+				else
+				{
+					SendMsgArduino(STANDARD_MODE);
+				}				
 			}
 		}
 		return 0;
@@ -171,6 +177,7 @@ public class SerialTest implements SerialPortEventListener
 			if(answer == true)
 			{
 				SendMsgArduino(TEACHER_CONFIRMED);
+				auditProfessor = input;
 				alreadyTeacher = true;
 			}
 			else
@@ -192,6 +199,7 @@ public class SerialTest implements SerialPortEventListener
 					//It`s an existing entry. Deleting. 
 					String query2 = "Delete from pessoa where nCartao = '" + input + "' and isProf = 0;";
 					executeSQLUpdate(query2);
+					sendAudit(auditProfessor, "personDeleted", input);
 					edit = false;
 					alreadyTeacher = false;
 					SendMsgArduino(STUDENT_ERASED);
@@ -209,6 +217,7 @@ public class SerialTest implements SerialPortEventListener
 				//Insert new Entry.
 				String query = "Insert into Pessoa (matricula, nCartao, isProf) values ('" + input + "', '" + numCardAdd + "', false);";
 				executeSQLUpdate(query);
+				sendAudit(auditProfessor, "personAdded", numCardAdd);
 				SendMsgArduino(STUDENT_INSERTED);
 				isAdd = false;
 				edit = false;
@@ -217,28 +226,32 @@ public class SerialTest implements SerialPortEventListener
 		}
 	}
 	
-    private static boolean executeSQL(String sql) throws Exception
+    private static boolean executeSQL(String query) throws Exception
     {
     	try{
+    		//System.out.println(query);
     		boolean r;
     		ResultSet rs = null;
     		Connection conn=Conn.openConn();
     		Statement stat=conn.createStatement();
-    		rs=stat.executeQuery(sql);
+    		rs=stat.executeQuery(query);
     		r = rs.first();
     		stat.close();
     		conn.close();
     		return r;    		
     	}catch(Exception e){
     		System.out.println("Couldn't connect to DB.");
+    		System.out.println(e);
     	}
     	return false;
     }
-    private static void executeSQLUpdate(String sql) throws Exception
+    
+    private static void executeSQLUpdate(String query) throws Exception
     {
+    	//System.out.println(query);
 		Connection conn=Conn.openConn();
 	    Statement stat=conn.createStatement();
-	    stat.executeUpdate(sql);
+	    stat.executeUpdate(query);
     	stat.close();
     	conn.close();
     }
@@ -251,6 +264,7 @@ public class SerialTest implements SerialPortEventListener
 		}
 		catch(Exception e){};
 	}
+    
 	public synchronized void close() 
 	{
 		if (serialPort != null) 
@@ -258,6 +272,31 @@ public class SerialTest implements SerialPortEventListener
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
+	}
+	
+	public void sendAudit(String user, String tipoMensagem, String target) {
+		String message = "";
+		
+		if(tipoMensagem == "accessGranted") {
+			message = "Access granted";
+		}else if(tipoMensagem == "personDeleted"){
+			message = "Professor deleted Person "+ target;
+		}else if(tipoMensagem == "personAdded"){
+			message = "Professor added Person "+ target;
+		}
+		else {
+			System.out.println("Problem with code for Audit.");
+		}
+		
+		try {
+			String query = "Insert into Audit (id, hora, usuario, mensagem) values (0, NOW(), '"+user+"',  '" + message + "');";
+			executeSQLUpdate(query);
+		} catch (Exception e) {
+			System.out.println("Problem commiting to Audit.");
+			System.out.println(e);
+		};
+		
+		return;
 	}
 	
 	public static void main(String[] args) throws Exception
