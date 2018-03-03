@@ -129,6 +129,12 @@ void loop()
         digitalWrite(red, LOW);
         digitalWrite(green, LOW);
         digitalWrite(blue, HIGH);
+        delay(3000);
+        lcd.clear();
+        lcd.setCursor(3, 0);
+        lcd.print("CONFIRMAR");
+        lcd.setCursor(3, 1);
+        lcd.print("PROFESSOR");
       }
       if(rec == 4)
       {        
