@@ -19,12 +19,13 @@ public class SerialTest implements SerialPortEventListener
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	private final int STANDARD_MODE = 1;
-	private final int ACESS_GRANTED = 2;
+	private final int ACCESS_GRANTED = 2;
 	private final int TEACHER_MODE = 3;
 	private final int CARD_ACCEPTED = 4;
 	private final int STUDENT_ERASED = 5;
 	private final int STUDENT_INSERTED = 6;
 	private final int TEACHER_CONFIRMED = 7;
+	private final int ACCESS_DENIED = 8;
 	
 	private boolean alreadyTeacher = false; //Verify if is Teacher in Teacher Mode
 	private boolean isAdd = false; //Check if is adding a new entry in Teacher Mode.
@@ -154,11 +155,12 @@ public class SerialTest implements SerialPortEventListener
 				if(answer == true)
 				{
 					sendAudit(input, "accessGranted", null);
-					SendMsgArduino(ACESS_GRANTED);
+					SendMsgArduino(ACCESS_GRANTED);
 				}
 				else
 				{
-					SendMsgArduino(STANDARD_MODE);
+					sendAudit(input, "accessDenied", null);
+					SendMsgArduino(ACCESS_DENIED);
 				}				
 			}
 		}
@@ -283,6 +285,8 @@ public class SerialTest implements SerialPortEventListener
 			message = "Professor deleted Person "+ target;
 		}else if(tipoMensagem == "personAdded"){
 			message = "Professor added Person "+ target;
+		}else if(tipoMensagem == "accessDenied"){
+			message = "Access denied";
 		}
 		else {
 			System.out.println("Problem with code for Audit.");

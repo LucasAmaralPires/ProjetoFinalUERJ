@@ -8,7 +8,7 @@
 #define RST_PIN 38
 LiquidCrystal lcd(48, 49, 50, 51, 52, 53);
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
-  
+
 char st[20];
 char digt[15];
 int cont_di;
@@ -196,6 +196,17 @@ void loop()
         digitalWrite(red, LOW);
         digitalWrite(green, LOW);
         digitalWrite(blue, HIGH);
+        lcd.clear();
+      }
+      if(rec == 8)
+      {        
+        lcd.clear();
+        ins_cartao = true;
+        lcd.setCursor(5, 0);
+        lcd.print("ACESSO");
+        lcd.setCursor(5, 1);
+        lcd.print("NEGADO");
+        delay(2000);        
         lcd.clear();
       }
     }
