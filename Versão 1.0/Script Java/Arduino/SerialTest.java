@@ -13,7 +13,6 @@ import java.util.Enumeration;
 
 import com.sun.org.apache.xalan.internal.utils.Objects;
 
-
 public class SerialTest implements SerialPortEventListener 
 {
 	SerialPort serialPort;
@@ -230,32 +229,37 @@ public class SerialTest implements SerialPortEventListener
 	
     private static boolean executeSQL(String query) throws Exception
     {
+    	Connection conn=Conn.openConn();
+    	Statement stat=conn.createStatement();
     	try{
     		//System.out.println(query);
     		boolean r;
     		ResultSet rs = null;
-    		Connection conn=Conn.openConn();
-    		Statement stat=conn.createStatement();
     		rs=stat.executeQuery(query);
     		r = rs.first();
-    		stat.close();
-    		conn.close();
     		return r;    		
     	}catch(Exception e){
     		System.out.println("Couldn't connect to DB.");
     		System.out.println(e);
+    	}finally {
+    		conn.close();    		
+    		stat.close();
     	}
     	return false;
     }
     
     private static void executeSQLUpdate(String query) throws Exception
     {
-    	//System.out.println(query);
 		Connection conn=Conn.openConn();
 	    Statement stat=conn.createStatement();
-	    stat.executeUpdate(query);
-    	stat.close();
-    	conn.close();
+	    try {
+	    	stat.executeUpdate(query);	    	
+	    }catch(Exception e){
+	    	System.out.println(e);
+	    }finally {	    	
+	    	stat.close();
+	    	conn.close();
+	    }
     }
   
     private void SendMsgArduino (int cod)
