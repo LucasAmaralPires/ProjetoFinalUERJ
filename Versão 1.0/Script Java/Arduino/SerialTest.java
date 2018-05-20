@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 //import gnu.io.*;
 import gnu.io.CommPortIdentifier; 
-import gnu.io.SerialPort;
+	import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener; 
 import java.util.Enumeration;
@@ -51,7 +51,7 @@ public class SerialTest implements SerialPortEventListener
 	/** Milliseconds to block while waiting for port open */
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
-	private static final int DATA_RATE = 9600;
+	private static final int DATA_RATE = 57600;
 
 	@SuppressWarnings("rawtypes")
 	public void initialize() 
