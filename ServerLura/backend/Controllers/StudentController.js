@@ -6,7 +6,7 @@ var express = require('express'),
 //Get all
 router.get('/getAll', function(req, res){
 	a = {};
-        mysql.execute("select * from Pessoa;", function(result){
+        mysql.execute("select * from T_STUDENT;", function(result){
                 a = result
                 res.json(a);
         });
@@ -16,7 +16,7 @@ router.get('/getAll', function(req, res){
 //Get by id
 router.get('/get/:id', function(req, res){
 	a = req.params.id;
-	mysql.execute("select * from Pessoa where id = " + a + ";", function(result){
+	mysql.execute("select * from T_STUDENT where id = " + a + ";", function(result){
 		res.json(result);
 	});
 });

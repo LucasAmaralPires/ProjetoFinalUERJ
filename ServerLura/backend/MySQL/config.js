@@ -1,3 +1,5 @@
+//Just need to change the values to connect to the Database
+
 var mysql = require('mysql');
 
 module.exports = {
