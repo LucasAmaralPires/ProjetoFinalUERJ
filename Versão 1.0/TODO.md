@@ -18,6 +18,7 @@ Esse arquivo representa a lista de tarefas que ainda precisam ser realizadas par
 * [ ] Adaptar o que já foi escrito para os novos parâmetros definidos do projeto
 * [ ] Acrescentar mais trabalhos correlatos 
 * [ ] Atualizar as imagens de explicação do comportamentos do projeto
+* [ ] Atualizar a imagem da pinagem dos componentes do projeto
 * [ ] Explicar com maiores detalhes os componentes do projeto
 * [ ] Realizar teste espaciais para adição do projeto
 * [ ] Documentar o processo de criação do projeto
