@@ -4,9 +4,14 @@
 
 		<script src="../../js/jquery-3.3.1.min.js"></script>
 		<script src="../../js/Student.js"></script>
+		<script src="../../js/blockUI.js"></script>
+		<script src="../../js/bootbox.min.js"></script>
 
 		<script src="../../js/bootstrap.js"></script>
 		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">		
+
+		<script src="../../js/toastr.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/toastr.min.css">
 	</head>
 	<body>
 		<div id="header" style="background:red;">
@@ -16,18 +21,17 @@
 			<h1>Student</h1>
 		</div>
 		<div>
-			<table id="MainTable" class="table">
+			<table id="MainTable" class="table table-striped">
 				<thead class="thead-dark">
 					<tr>
 						<th>Name</th>
 						<th>Matriculation</th>
+						<th>Has Card</th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>Rafael</td>
-						<td>2345678</td>
-					</tr>
+				<tbody id="tbody">
 				</tbody>
 			</table>
 		</div>
