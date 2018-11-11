@@ -11,19 +11,21 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
     * [X] /getAll - (GET) Pegar todos ***(Adaptar a Exlusão Lógica)***
     * [ ] /getByFilter - (POST) Pegar todos de acordo com o filtro
     * [X] /get/:id - (GET) Pegar um unico de acordo com id
-    * [ ] /save - (POST) A partir da form preenchida salvar no banco
+    * [ ] /save - (POST) A partir da form preenchida salvar (ou realizar update) no banco
     * [X] /delete/:id - (POST) A partir de id, deletar ***(Exclusão lógica!!!)***
   * Static
-    * .html
+    * main.html
       * [ ] div do filtro com ambos os campos (nome, matricula)
-      * [X] table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao(boolean), editar, deletar)
-      * [ ] botao para inserir
-      * [X] modal com a form para inserir/editar
-    * .js
-      * [ ] funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
-      * [ ] funcao de apagar todos os campos da modal toda vez que abrir a modal
-      * [ ] colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
-      * [ ] funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
+      * [X] Table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao(boolean), editar, deletar)
+      * [X] Botao para inserir (abrir a modal)
+      * [ ] Modal com a form para inserir/editar
+    * Student.js
+      * [X] Funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
+      * [ ] Funcao de apagar todos os campos da modal toda vez que abrir a modal
+      * [ ] Colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
+      * [ ] Funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
+  * Outros
+    * [ ] Uma tela para dizer todas as turmas (Class) na qual ele participa, alem de ver a presenca dele (Attendence). Seria acessavel no proprio CRUD. Isso so seria feito depois de ter feito todos os outros CRUDs, claro.
 
 * Teacher
   * TeacherController.js - Fazer e implementar as requests
@@ -35,13 +37,13 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * Static
     * .html
       * [ ] div do filtro com ambos os campos (nome, matricula)
-      * [ ] table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao, editar, deletar)
-      * [ ] botao para inserir
-      * [ ] modal com a form para inserir/editar
+      * [ ] Table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao, editar, deletar)
+      * [ ] Botao para inserir
+      * [ ] Modal com a form para inserir/editar
     * .js
-      * [ ] funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
-      * [ ] funcao de apagar todos os campos da modal toda vez que abrir a modal
-      * [ ] colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
+      * [ ] Funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
+      * [ ] Funcao de apagar todos os campos da modal toda vez que abrir a modal
+      * [ ] Colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
 
 * Subject
   * Esperar fazer Student e Teacher
