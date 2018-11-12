@@ -30,11 +30,17 @@ router.post("/delete/:id", function(req, res){
 
 //Save to Database
 router.post('/save', function(req, res){
-	console.log(req.body)
 	data = req.body;
-	mysql.execute("insert into T_STUDENT values(0, " + data.matriculation + ", "+ data.card + ", " + data.name + ", NULL);", function(result){
-		res.json(result);
-	});
+	if(data.id == undefined || data.id == "" || data.id == null){
+		mysql.execute("insert into T_STUDENT values(0, '" + data.matriculation + "', '"+ data.card + "', '" + data.name + "', NULL);", function(result){
+			res.json(result);
+		});
+	}
+	else {
+		mysql.execute("update T_STUDENT set NUM_MATRICULATION='" + data.matriculation + "', NUM_CARD='"+ data.card + "', TXT_NAME='" + data.name + "' where ID = "+ data.id + ";", function(result){
+			res.json(result);
+		});
+	}
 });
 
 module.exports = router;

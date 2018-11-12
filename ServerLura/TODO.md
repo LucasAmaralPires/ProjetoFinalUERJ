@@ -11,17 +11,17 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
     * [X] /getAll - (GET) Pegar todos ***(Adaptar a Exlusão Lógica)***
     * [ ] /getByFilter - (POST) Pegar todos de acordo com o filtro
     * [X] /get/:id - (GET) Pegar um unico de acordo com id
-    * [ ] /save - (POST) A partir da form preenchida salvar (ou realizar update) no banco
+    * [X] /save - (POST) A partir da form preenchida salvar/atualizar um (novo) registro no banco
     * [X] /delete/:id - (POST) A partir de id, deletar ***(Exclusão lógica!!!)***
   * Static
     * main.html
       * [ ] div do filtro com ambos os campos (nome, matricula)
       * [X] Table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao(boolean), editar, deletar)
       * [X] Botao para inserir (abrir a modal)
-      * [ ] Modal com a form para inserir/editar
+      * [X] Modal com a form para inserir/editar
     * Student.js
       * [X] Funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
-      * [ ] Funcao de apagar todos os campos da modal toda vez que abrir a modal
+      * [X] Funcao de apagar todos os campos da modal toda vez que abrir a modal
       * [ ] Colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
       * [ ] Funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
   * Outros
