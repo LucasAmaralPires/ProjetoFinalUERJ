@@ -87,4 +87,3 @@ var remove = function(id){
 		}
 	});
 };
-
