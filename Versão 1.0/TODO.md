@@ -11,7 +11,7 @@ Esse arquivo representa a lista de tarefas que ainda precisam ser realizadas par
 ## Raspberry Pi
 * [ ] Criar o código de comunicação com o Arduino usando o módulo NRF24L01
 * [ ] Refazer o código já exixtente de Java para Python
-* [ ] Instalar a comunicação Python/MySQL
+* [X] Instalar a comunicação Python/MySQL
 * [ ] Alterar o BD em MySQL a partir da comunicação com o Arduino
 
 ## Projeto escrito
