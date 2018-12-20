@@ -7,7 +7,7 @@ getAll = function(){
 	$.get("/Student/getAll", function(response){
 		string = "";
 		$.each(response, function(index, value){
-			hasCard = value.NUM_CARD != null ? "Yes" : "No";
+			hasCard = value.NUM_CARD != "" ? "Yes" : "No";
 			string += "<tr>";
 			string += "<td>" + value.TXT_NAME + "</td>";
 			string += "<td>" + value.NUM_MATRICULATION + "</td>";
@@ -59,20 +59,17 @@ var save = function(){
 	student.matriculation = $("#info-modal-matriculation").val();
 	student.card = $("#info-modal-card").val();
 	$.blockUI();
-	try {
-		$.post("/Student/save", student, function(data, status){
-			toastr.success("Student " + student.name + " was saved successfuly!");
+	$.post("/Student/save", student, function(data, status){
+		if(data.success != true){
+			toastr.error(data.data);
 			$.unblockUI();
-			closeModal();
-			getAll();
-		});
-	}
-	catch(err) {
-		toastr.error(err);
-	}
-	finally{
+			return;
+		}
+		toastr.success("Student " + student.name + " was saved successfuly!");
 		$.unblockUI();
-	}
+		closeModal();
+		getAll();
+	});
 };
 
 var remove = function(id){

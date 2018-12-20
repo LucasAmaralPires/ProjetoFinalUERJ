@@ -5,7 +5,6 @@ var express = require('express'),
 
 //Get all
 router.get('/getAll', function(req, res){
-	all = {};
     mysql.execute("select * from T_STUDENT where DAT_REMOVED IS NULL;", function(result){
             res.json(result);
     });
@@ -31,14 +30,26 @@ router.post("/delete/:id", function(req, res){
 //Save to Database
 router.post('/save', function(req, res){
 	data = req.body;
+
+	//Error Handling
+	if (data.name == null || data.name == ""){
+		res.json({success: false, data:"Name is missing."});
+		return;
+	}
+	if (data.matriculation == null || data.matriculation == ""){
+        res.json({success: false, data:"Matriculation is missing."});
+        return;
+    }
+
+
 	if(data.id == undefined || data.id == "" || data.id == null){
 		mysql.execute("insert into T_STUDENT values(0, '" + data.matriculation + "', '"+ data.card + "', '" + data.name + "', NULL);", function(result){
-			res.json(result);
+			res.json({success: true, data:result});
 		});
 	}
 	else {
 		mysql.execute("update T_STUDENT set NUM_MATRICULATION='" + data.matriculation + "', NUM_CARD='"+ data.card + "', TXT_NAME='" + data.name + "' where ID = "+ data.id + ";", function(result){
-			res.json(result);
+			res.json({success: true, data:result});
 		});
 	}
 });
