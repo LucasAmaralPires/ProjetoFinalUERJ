@@ -15,12 +15,32 @@
 	</head>
 	<body>
 		<div class = "container-fluid">
-			<div id="header" style="background:#696969;">
+			<div id="header">
 				<a href="../index.html">Home</a>
 			</div>
 			<div>
 				<h1>Student</h1>
 			</div>
+			<div id="search-fields" class="col-12">
+				<form class="form-inline">
+					<div class="form-group col-3">
+                        <label for="search-name">Name</label>
+                        <input type="text" class="form-control" id="search-name" />
+                    </div>
+                    <div class="form-group col-3">
+                        <label for="search-matriculation">Matriculation</label>
+                        <input type="text" class="form-control" id="search-matriculation" />
+                    </div>
+                    <div class="form-group col-3">
+                        <label for="search-card">Card</label>
+                        <input type="text" class="form-control" id="search-card" />
+                    </div>
+                </form>
+			</div>
+			<div id="search-options" class="col-12">
+                <button id="search-button-search" type="button" class="btn btn-outline-primary" onclick="searchFilter()">Filter</button>
+				<button id="search-button-clean" type="button" class="btn btn-outline-secondary" onclick="cleanFilter()">Clean</button>
+            </div>
 			<div class="col-12">
 				<table class="table table-striped table-bordered" style="table-layout: fixed;">
 					<thead class="thead-dark">

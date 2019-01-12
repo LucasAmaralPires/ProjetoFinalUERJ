@@ -6,7 +6,7 @@ var express = require('express'),
 //Get all
 router.get('/getAll', function(req, res){
     mysql.execute("select * from T_STUDENT where DAT_REMOVED IS NULL;", function(result){
-            res.json(result);
+            res.json({success:true, data:result});
     });
 
 });
@@ -15,8 +15,30 @@ router.get('/getAll', function(req, res){
 router.get('/get/:id', function(req, res){
 	var id = req.params.id;
 	mysql.execute("select * from T_STUDENT where ID = " + id + ";", function(result){
-		res.json(result);
+		if(result.length == 0){
+			res.json({success:false, data:"Something is wrong. it seems like this person do not exist in the DB. Please talk to the Admin."});
+		}
+		res.json({success: true, data:result});
 	});
+});
+
+//Get by Filter
+router.post('/getFilter', function(req, res){
+	var filter = req.body;
+	string = "select * from T_STUDENT where DAT_REMOVED IS NULL ";
+	if(filter.name != null && filter.name != ""){
+		string += "and TXT_NAME LIKE '%"+ filter.name +"%'";
+	}
+	if(filter.matriculation != null && filter.matriculation != ""){
+        string += "and NUM_MATRICULATION LIKE '%"+ filter.matriculation +"%'";
+    }
+	if(filter.card != null && filter.card != ""){
+        string += "and NUM_CARD LIKE '%"+ filter.card +"%'";
+    }
+	string += ";"
+	mysql.execute(string, function(result){
+        res.json({success: true, data:result});
+    });
 });
 
 //Delete (Logical) by id

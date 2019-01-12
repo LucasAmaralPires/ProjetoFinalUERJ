@@ -10,7 +10,7 @@ module.exports = {
 			}
 			con.query(sql, function(erro, result, fields){
 				if (erro) throw erro;
-				console.log("realizado a seguinte query: '" + sql + "' com a seguinte resposta:");
+				console.log("realizado a seguinte query: [" + sql + "] com a seguinte resposta:");
 				console.log(result)
 				console.log("===END TRANSACTION===");
 				con.end();

@@ -2,21 +2,30 @@ $(document).ready(function(){
 	getAll();
 });
 
-getAll = function(){
+var searchFilter = function(){
+	var filter = {};
+	filter.name = $("#search-name").val();
+    filter.matriculation = $("#search-matriculation").val();
+	filter.card = $("#search-card").val();
+	console.log(filter);
+	$.blockUI();
+	$.post("/Student/getFilter", filter, function(response){
+		fillTable(response);
+		$.unblockUI();
+	});
+};
+
+var cleanFilter = function(){
+    $("#search-name").val("");
+    $("#search-matriculation").val("");
+    $("#search-card").val("");
+	searchFilter();
+};
+
+var getAll = function(){
 	$.blockUI();
 	$.get("/Student/getAll", function(response){
-		string = "";
-		$.each(response, function(index, value){
-			hasCard = value.NUM_CARD != "" ? "Yes" : "No";
-			string += "<tr>";
-			string += "<td>" + value.TXT_NAME + "</td>";
-			string += "<td>" + value.NUM_MATRICULATION + "</td>";
-			string += "<td>" + hasCard + "</td>";
-			string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
-			string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
-			string += "</tr>";
-		});
-		$("#tbody").html(string);
+		fillTable(response);
 		$.unblockUI();
 	});
 };
@@ -26,11 +35,11 @@ var openModal = function(id){
 	if(id != undefined){
 		$.blockUI();
 		$.get("/Student/get/"+id, function(response){
-			if (response.length == 0){
-				toastr.error("Something is wrong. it seems like this person do not exist in the DB. Please talk to the Admin.")
+			if (response.success != true){
+				toastr.error(response.data);
 				return;
 			}
-			response = response[0];
+			response = response.data[0];
 			$("#info-modal-id").val(response.ID);
 			$("#info-modal-name").val(response.TXT_NAME);
 			$("#info-modal-matriculation").val(response.NUM_MATRICULATION);
@@ -39,6 +48,21 @@ var openModal = function(id){
 		});
 	}
 	$("#mainModal").modal("show");
+};
+
+var fillTable = function(response){
+	string = "";
+    $.each(response.data, function(index, value){
+        hasCard = value.NUM_CARD != "" ? "Yes" : "No";
+        string += "<tr>";
+        string += "<td>" + value.TXT_NAME + "</td>";
+        string += "<td>" + value.NUM_MATRICULATION + "</td>";
+        string += "<td>" + hasCard + "</td>";
+        string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
+        string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
+        string += "</tr>";
+    });
+    $("#tbody").html(string);
 };
 
 var closeModal = function(){
