@@ -1,9 +1,9 @@
-$(document).ready(function(){
-	getAll();
-});
-
 var pagination = {page: 1, dataPerPage: 15};
-var totalPages = 0
+var totalPages = 0;
+
+$(document).ready(function(){
+    searchFilter(true);
+});
 
 var searchFilter = function(restartPage){
 	var filter = {};
@@ -29,7 +29,7 @@ var cleanFilter = function(){
 	searchFilter();
 };
 
-var getAll = function(){
+var getAll = function(){ //OBSOLETE
 	$.blockUI();
 	$.post("/Student/getAll", pagination, function(response){
 		//console.log(response)
