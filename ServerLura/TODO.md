@@ -21,12 +21,12 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
       * [X] Botao para inserir (abrir a modal)
       * [X] Modal com a form para inserir/editar
 	  * [X] Paginacao de maneira facil e intuitiva (alem de bonita).
-	  * [ ] Titulo da Modal diferente ao estar inserindo e ao estar editando.
+	  * [X] Titulo da Modal diferente ao estar inserindo e ao estar editando.
     * Student.js
       * [X] Funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
       * [X] Funcao de apagar todos os campos da modal toda vez que abrir a modal
       * [X] Colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
-      * [ ] Funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
+      * [X] Funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
 	  * [X] Paginacao Funcional. Para isso tem que adaptar todo resultado.
   * Outros
     * [ ] Uma tela para dizer todas as turmas (Class) na qual ele participa, alem de ver a presenca dele (Attendence). Seria acessavel no proprio CRUD. Isso so seria feito depois de ter feito todos os outros CRUDs, claro.

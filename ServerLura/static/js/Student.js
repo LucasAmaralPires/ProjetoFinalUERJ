@@ -40,7 +40,9 @@ var getAll = function(){
 
 var openModal = function(id){
 	clearModal();
+	$("#modalTitle").html("New Student");
 	if(id != undefined){
+		$("#modalTitle").html("Edit Student");
 		$.blockUI();
 		$.get("/Student/get/"+id, function(response){
 			if (response.success != true){
@@ -96,16 +98,25 @@ var save = function(){
 	student.matriculation = $("#info-modal-matriculation").val();
 	student.card = $("#info-modal-card").val();
 	$.blockUI();
-	$.post("/Student/save", student, function(data, status){
-		if(data.success != true){
-			toastr.error(data.data);
+	$.post("/Student/checkIfExists", student, function(data, status){
+		alreadyExists = data.length > 0 ? true : false;
+		if(alreadyExists == true){
+			toastr.error("The Matriculation " + student.matriculation + " already exists.");
 			$.unblockUI();
 			return;
-		}
-		toastr.success("Student " + student.name + " was saved successfuly!");
-		$.unblockUI();
-		closeModal();
-		getAll();
+		} else{
+			$.post("/Student/save", student, function(data, status){
+				if(data.success != true){
+					toastr.error(data.data);
+					$.unblockUI();
+					return;
+				}
+				toastr.success("Student " + student.name + " was saved successfuly!");
+				$.unblockUI();
+				closeModal();
+				getAll();
+			});
+		};
 	});
 };
 
@@ -118,7 +129,7 @@ var remove = function(id){
 				$.unblockUI();
 				getAll();
 			});
-		}
+		};
 	});
 };
 

@@ -17,7 +17,7 @@ var getNumEntries = function(stringWhere, callback){
     });
 };
 
-//Get all
+//Get all (maybe useless)
 router.post('/getAll', function(req, res){
 	pagination = req.body;
 	stringPag = getPaginationString(pagination);
@@ -68,6 +68,14 @@ router.post('/getFilter', function(req, res){
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
 	mysql.execute("update T_STUDENT set DAT_REMOVED = NOW() where ID = " + id + ";", function(result){
+		res.json(result);
+	});
+});
+
+//Check if already exists
+router.post('/checkIfExists', function(req, res){
+	student = req.body;
+	mysql.execute("select * from T_STUDENT where NUM_MATRICULATION = '" + student.matriculation + "'", function(result){
 		res.json(result);
 	});
 });
