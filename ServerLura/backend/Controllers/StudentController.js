@@ -3,10 +3,29 @@ var mysql = require('../MySQL/mysqlConnector.js');
 var express = require('express'),
     router = express.Router();
 
+//Get pagination Query
+var getPaginationString = function(p){
+	startingPoint = ((p.page-1) * p.dataPerPage);
+	s = "LIMIT "+ startingPoint + ", "+ p.dataPerPage;
+	return s;
+};
+
+//Count how many entries Student have for pagination
+var getNumEntries = function(stringWhere, callback){
+	mysql.execute("select count(*) as numEntries from T_STUDENT " + stringWhere + ";", function(result){
+            callback(result[0].numEntries);
+    });
+};
+
 //Get all
-router.get('/getAll', function(req, res){
-    mysql.execute("select * from T_STUDENT where DAT_REMOVED IS NULL;", function(result){
-            res.json({success:true, data:result});
+router.post('/getAll', function(req, res){
+	pagination = req.body;
+	stringPag = getPaginationString(pagination);
+	stringWhere = "where DAT_REMOVED IS NULL "
+    mysql.execute("select * from T_STUDENT "+ stringWhere + stringPag + ";", function(result){
+		entries = getNumEntries(stringWhere, function(numEntries){
+			res.json({success:true, data:result, numEntries:numEntries});
+		});
     });
 
 });
@@ -25,19 +44,23 @@ router.get('/get/:id', function(req, res){
 //Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;
-	string = "select * from T_STUDENT where DAT_REMOVED IS NULL ";
+	filter.pagination = {page:filter.page, dataPerPage:filter.dataPerPage}
+	string = "select * from T_STUDENT ";
+	stringWhere = " where DAT_REMOVED IS NULL ";
+	stringPag = getPaginationString(filter.pagination);
 	if(filter.name != null && filter.name != ""){
-		string += "and TXT_NAME LIKE '%"+ filter.name +"%'";
+		stringWhere += "and TXT_NAME LIKE '%"+ filter.name +"%'";
 	}
 	if(filter.matriculation != null && filter.matriculation != ""){
-        string += "and NUM_MATRICULATION LIKE '%"+ filter.matriculation +"%'";
+        stringWhere += "and NUM_MATRICULATION LIKE '%"+ filter.matriculation +"%'";
     }
 	if(filter.card != null && filter.card != ""){
-        string += "and NUM_CARD LIKE '%"+ filter.card +"%'";
+        stringWhere += "and NUM_CARD LIKE '%"+ filter.card +"%'";
     }
-	string += ";"
-	mysql.execute(string, function(result){
-        res.json({success: true, data:result});
+	mysql.execute(string+stringWhere+stringPag+";", function(result){
+		entries = getNumEntries(stringWhere, function(numEntries){
+            res.json({success:true, data:result, numEntries:numEntries});
+        });
     });
 });
 

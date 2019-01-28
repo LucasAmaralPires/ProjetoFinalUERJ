@@ -2,14 +2,21 @@ $(document).ready(function(){
 	getAll();
 });
 
-var searchFilter = function(){
+var pagination = {page: 1, dataPerPage: 15};
+var totalPages = 0
+
+var searchFilter = function(restartPage){
 	var filter = {};
 	filter.name = $("#search-name").val();
     filter.matriculation = $("#search-matriculation").val();
 	filter.card = $("#search-card").val();
-	console.log(filter);
+	if(restartPage == true)
+		pagination.page = 1;
+	filter.dataPerPage = pagination.dataPerPage;
+	filter.page = pagination.page;
 	$.blockUI();
 	$.post("/Student/getFilter", filter, function(response){
+		//console.log(response);
 		fillTable(response);
 		$.unblockUI();
 	});
@@ -24,7 +31,8 @@ var cleanFilter = function(){
 
 var getAll = function(){
 	$.blockUI();
-	$.get("/Student/getAll", function(response){
+	$.post("/Student/getAll", pagination, function(response){
+		//console.log(response)
 		fillTable(response);
 		$.unblockUI();
 	});
@@ -63,6 +71,11 @@ var fillTable = function(response){
         string += "</tr>";
     });
     $("#tbody").html(string);
+	$("#numEntries").html("Students Found: " + response.numEntries);
+
+	$("#actualPage").html("Page: " + pagination.page);
+	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
+	$("#totalPage").html("/" + totalPages);
 };
 
 var closeModal = function(){
@@ -107,4 +120,28 @@ var remove = function(id){
 			});
 		}
 	});
+};
+
+var previousPage = function(){
+	if(pagination.page != 1){
+		pagination.page--;
+		searchFilter(false);
+	}
+};
+
+var nextPage = function(){
+	if(pagination.page != totalPages){
+		pagination.page++;
+		searchFilter(false);
+	}
+};
+
+var goToPage = function(){
+	page = $("#goToInput").val();
+	if(page != pagination.page && page <= totalPages && page > 0){
+		pagination.page = page;
+		searchFilter(false);
+	} else if(page > totalPages){
+		toastr.error("Page " + totalPages + " is the last page.")
+	}
 };
