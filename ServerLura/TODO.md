@@ -5,11 +5,12 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [X] Colocar toastr.js e toastr.css no projeto (foi colocado tmb iconic, blockUI e bootbox.js)
 * [X] Adaptar no banco de dados as tabelas de Student e Teacher para colocar ***Exclusão Lógica***
 * [X] Error Handling no Back End e nao so se basear no front.
+* [ ] Fazer um arquivo css para estilizar a base toda do server. Ja coloquei algumas classes vazias nas div's
 
 ### Entidades
 * Student
   * StudentController.js - Fazer e implementar as requests
-    * [X] /getAll - (GET) Pegar todos ***(Adaptar a Exlusão Lógica)***
+    * [X] /getAll - (GET) Pegar todos ***(Adaptar a Exlusão Lógica)*** -> Acabou virando obsoleto.
     * [X] /getByFilter - (POST) Pegar todos de acordo com o filtro
     * [X] /get/:id - (GET) Pegar um unico de acordo com id
     * [X] /save - (POST) A partir da form preenchida salvar/atualizar um (novo) registro no banco
@@ -32,22 +33,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
     * [ ] Uma tela para dizer todas as turmas (Class) na qual ele participa, alem de ver a presenca dele (Attendence). Seria acessavel no proprio CRUD. Isso so seria feito depois de ter feito todos os outros CRUDs, claro.
 
 * Teacher
-  * TeacherController.js - Fazer e implementar as requests
-    * [ ] /getAll - (GET) Pegar todos ***(Não esquecer a Exlusão Lógica)***
-    * [ ] /getByFilter - (POST) Pegar todos de acordo com o filtro
-    * [ ] /get/:id - (GET) Pegar um unico de acordo com id
-    * [ ] /save - (POST) A partir da form preenchida salvar no banco
-    * [ ] /delete/:id - (POST) A partir de id, deletar ***(Exclusão lógica!!!)***
-  * Static
-    * .html
-      * [ ] div do filtro com ambos os campos (nome, matricula)
-      * [ ] Table mostrando todos (ou paginado?) os Estudantes (Nome, Matricula, cartao, editar, deletar)
-      * [ ] Botao para inserir
-      * [ ] Modal com a form para inserir/editar
-    * .js
-      * [ ] Funcao de abrir a modal que recebe o id. caso nao receba nada esta inserindo, senao esta editando.
-      * [ ] Funcao de apagar todos os campos da modal toda vez que abrir a modal
-      * [ ] Colocar um toastr para qualquer ação realizada (inserir, editar, deletar, erro)
+  * Replicar Student e adaptar
 
 * Subject
   * Esperar fazer Student e Teacher
