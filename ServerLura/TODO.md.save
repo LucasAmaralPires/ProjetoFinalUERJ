@@ -5,7 +5,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [X] Colocar toastr.js e toastr.css no projeto (foi colocado tmb iconic, blockUI e bootbox.js)
 * [X] Adaptar no banco de dados as tabelas de Student e Teacher para colocar ***Exclusão Lógica***
 * [X] Error Handling no Back End e nao so se basear no front.
-* [ ] Fazer um arquivo css para estilizar a base toda do server (lura.css). Ja coloquei algumas classes vazias nas div's
+* [ ] Fazer um arquivo css para estilizar a base toda do server. Ja coloquei algumas classes vazias nas div's
 
 ### Entidades
 * Student
@@ -33,7 +33,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
     * [ ] Uma tela para dizer todas as turmas (Class) na qual ele participa, alem de ver a presenca dele (Attendence). Seria acessavel no proprio CRUD. Isso so seria feito depois de ter feito todos os outros CRUDs, claro.
 
 * Teacher
-  * [X] Replicar Student e adaptar
+  * Replicar Student e adaptar
 
 * Subject
   * Esperar fazer Student e Teacher
@@ -46,6 +46,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   
 * Class
   * Esperar fazer todos os anteriores
+  * Esse sera de longe o mais dificil por ser o mais diferente, alem de requerer o resto.
   
 * Lecture
   * Esperar fazer Class

@@ -19,6 +19,9 @@ app.use("/static", express.static(path.join(__dirname, "../static")));
 //Each Entity has it own .js file named 'Controller' to tell what paths it has and what those does.
 const StudentController = require('./Controllers/StudentController.js');
 app.use('/Student', StudentController);
+
+const TeacherController = require('./Controllers/TeacherController.js');
+app.use('/Teacher', TeacherController);
 //CONTROLLERS END
 
 //INDEX CALL BEGIN
