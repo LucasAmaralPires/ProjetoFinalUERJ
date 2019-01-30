@@ -117,7 +117,7 @@ var save = function(){
 				toastr.success("Teacher " + teacher.name + " was saved successfuly!");
 				$.unblockUI();
 				closeModal();
-				getAll();
+				searchFilter(false);
 			});
 		};
 	});
@@ -130,7 +130,7 @@ var remove = function(id){
 			$.post("/Teacher/delete/"+id, id, function(data, status){
 				toastr.success("Teacher removed successfuly.");
 				$.unblockUI();
-				getAll();
+				searchFilter(false);
 			});
 		};
 	});

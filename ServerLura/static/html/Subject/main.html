@@ -1,9 +1,9 @@
 <html>
 	<head>
-		<title>Teacher CRUD</title>
+		<title>Subject CRUD</title>
 
 		<script src="../../js/jquery-3.3.1.min.js"></script>
-		<script src="../../js/Teacher.js"></script>
+		<script src="../../js/Subject.js"></script>
 		<script src="../../js/blockUI.js"></script>
 		<script src="../../js/bootbox.min.js"></script>
 
@@ -46,7 +46,7 @@
 			</nav>
 
 			<div style="margin-top:70px;" class="col-12 lura-title">
-				<h1>Teacher</h1>
+				<h1>Subject</h1>
 			</div>
 
 			<div style="margin-bottom:20px;" class="border lura-filter-box">
@@ -57,12 +57,12 @@
                 	    <input type="text" class="form-control" id="search-name" />
 	                </div>
     	            <div class="form-group col-3">
-        	            <label for="search-matriculation">Matriculation</label>
-            	        <input type="text" class="form-control" id="search-matriculation" />
+        	            <label for="search-matriculation">Code</label>
+            	        <input type="number" class="form-control" id="search-code" />
                 	</div>
 	                <div class="form-group col-3">
-    	                <label for="search-card">Card</label>
-        	            <input type="text" class="form-control" id="search-card" />
+    	                <label for="search-card">Credits</label>
+        	            <input type="number" class="form-control" id="search-credits" />
             	    </div>
 				</div>
 				<div style="margin-left:20px; margin-bottom:10px;" id="search-options" class="form-row lura-filter-buttons">
@@ -79,8 +79,8 @@
 					<thead class="thead-dark">
 						<tr>
 							<th style="width: 68%">Name</th>
-							<th style="width: 20%">Matriculation</th>
-							<th style="width: 6%">Has Card</th>
+							<th style="width: 13%">Code</th>
+							<th style="width: 13%">Credits</th>
 							<th style="width: 3%"></th>
 							<th style="width: 3%"></th>
 						</tr>
@@ -97,7 +97,7 @@
 				<div style="margin-right:5px;">Go to Page: </div>
 				<div style="margin-right:5px;"><input id="goToInput" class="form-control" type="number" min="1"></div>
 				<button style="margin-right:30px;" type="button" class="btn btn-outline-secondary" onclick="goToPage()">Go</button>
-				<button type="button" class="btn btn-outline-primary" onclick="openModal()">New Teacher</button>
+				<button type="button" class="btn btn-outline-primary" onclick="openModal()">New Subject</button>
 			</div>
 			
 			<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true">
@@ -117,12 +117,12 @@
 									<input type="text" class="form-control" id="info-modal-name" />
 								</div>
 								<div class="form-group">
-									<label for="info-modal-matriculation">Matriculation*</label>
-									<input type="text" class="form-control" id="info-modal-matriculation" />
+									<label for="info-modal-matriculation">Code*</label>
+									<input type="text" class="form-control" id="info-modal-code" />
 								</div>
 								<div class="form-group">
-									<label for="info-modal-card">Card</label>
-									<input type="text" class="form-control" id="info-modal-card" />
+									<label for="info-modal-card">Credits*</label>
+									<input type="text" class="form-control" id="info-modal-credits" />
 								</div>
 							</form>
 						</div>

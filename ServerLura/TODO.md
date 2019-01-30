@@ -36,16 +36,18 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Replicar Student e adaptar
 
 * Subject
-  * Esperar fazer Student e Teacher
+  * [ ] Replicar e adaptar
 
 * Classroom
-  * Esperar fazer Student e Teacher
+  * [ ] Replicar e adaptar
   
 * Schedule
-  * Esperar fazer Student e Teacher
+  * [ ] Replicar e adaptar
   
 * Class
-  * Esperar fazer todos os anteriores
+  * [ ] Esperar fazer todos os anteriores
+  * [ ] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
+  * [ ] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
   
 * Lecture
   * Esperar fazer Class

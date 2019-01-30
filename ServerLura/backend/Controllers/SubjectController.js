@@ -10,9 +10,9 @@ var getPaginationString = function(p){
 	return s;
 };
 
-//Count how many entries Teacher have for pagination
+//Count how many entries Subjects have for pagination
 var getNumEntries = function(stringWhere, callback){
-	mysql.execute("select count(*) as numEntries from T_TEACHER " + stringWhere + ";", function(result){
+	mysql.execute("select count(*) as numEntries from T_SUBJECT " + stringWhere + ";", function(result){
             callback(result[0].numEntries);
     });
 };
@@ -21,9 +21,8 @@ var getNumEntries = function(stringWhere, callback){
 router.post('/getAll', function(req, res){
 	pagination = req.body;
 	stringPag = getPaginationString(pagination);
-	stringWhere = "where DAT_REMOVED IS NULL "
-    mysql.execute("select * from T_TEACHER "+ stringWhere + stringPag + ";", function(result){
-		entries = getNumEntries(stringWhere, function(numEntries){
+    mysql.execute("select * from T_SUBJECT "+ stringPag + ";", function(result){
+		entries = getNumEntries("", function(numEntries){
 			res.json({success:true, data:result, numEntries:numEntries});
 		});
     });
@@ -33,9 +32,9 @@ router.post('/getAll', function(req, res){
 //Get by id
 router.get('/get/:id', function(req, res){
 	var id = req.params.id;
-	mysql.execute("select * from T_TEACHER where ID = " + id + ";", function(result){
+	mysql.execute("select * from T_SUBJECT where ID = " + id + ";", function(result){
 		if(result.length == 0){
-			res.json({success:false, data:"Something is wrong. it seems like this teacher do not exist in the DB. Please talk to the Admin."});
+			res.json({success:false, data:"Something is wrong. it seems like this subject do not exist in the DB. Please talk to the Admin."});
 		}
 		res.json({success: true, data:result});
 	});
@@ -45,17 +44,17 @@ router.get('/get/:id', function(req, res){
 router.post('/getFilter', function(req, res){
 	var filter = req.body;
 	filter.pagination = {page:filter.page, dataPerPage:filter.dataPerPage}
-	string = "select * from T_TEACHER ";
-	stringWhere = " where DAT_REMOVED IS NULL ";
+	string = "select * from T_SUBJECT ";
+	stringWhere = " where 1=1 ";
 	stringPag = getPaginationString(filter.pagination);
-	if(filter.name != null && filter.name != ""){
-		stringWhere += "and TXT_NAME LIKE '%"+ filter.name +"%'";
+	if(filter.code != null && filter.code != ""){
+		stringWhere += "and NUM_CODE LIKE '%"+ filter.code +"%'";
 	}
-	if(filter.matriculation != null && filter.matriculation != ""){
-        stringWhere += "and NUM_MATRICULATION LIKE '%"+ filter.matriculation +"%'";
+	if(filter.credits != null && filter.credits != ""){
+        stringWhere += "and NUM_CREDITS LIKE '%"+ filter.credits +"%'";
     }
-	if(filter.card != null && filter.card != ""){
-        stringWhere += "and NUM_CARD LIKE '%"+ filter.card +"%'";
+	if(filter.name != null && filter.name != ""){
+        stringWhere += "and TXT_NAME LIKE '%"+ filter.name +"%'";
     }
 	mysql.execute(string+stringWhere+stringPag+";", function(result){
 		entries = getNumEntries(stringWhere, function(numEntries){
@@ -64,18 +63,18 @@ router.post('/getFilter', function(req, res){
     });
 });
 
-//Delete (Logical) by id
+//Delete by id
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
-	mysql.execute("update T_TEACHER set DAT_REMOVED = NOW() where ID = " + id + ";", function(result){
+	mysql.execute("delete from T_SUBJECT where ID = " + id + ";", function(result){
 		res.json(result);
 	});
 });
 
 //Check if already exists
 router.post('/checkIfExists', function(req, res){
-	teacher = req.body;
-	mysql.execute("select * from T_TEACHER where NUM_MATRICULATION = '" + teacher.matriculation + "'", function(result){
+	subject = req.body;
+	mysql.execute("select * from T_SUBJECT where NUM_CODE = '" + subject.code + "' OR TXT_NAME = '"+ subject.name +"';", function(result){
 		res.json(result);
 	});
 });
@@ -89,19 +88,23 @@ router.post('/save', function(req, res){
 		res.json({success: false, data:"Name is missing."});
 		return;
 	}
-	if (data.matriculation == null || data.matriculation == ""){
-        res.json({success: false, data:"Matriculation is missing."});
+	if (data.code == null || data.code == ""){
+        res.json({success: false, data:"Code is missing."});
+        return;
+    }
+	if (data.credits == null || data.credits == ""){
+        res.json({success: false, data:"Credits is missing."});
         return;
     }
 
 
 	if(data.id == undefined || data.id == "" || data.id == null){
-		mysql.execute("insert into T_TEACHER values(0, '" + data.matriculation + "', '"+ data.card + "', '" + data.name + "', NULL);", function(result){
+		mysql.execute("insert into T_SUBJECT values(0, '" + data.code + "', '"+ data.credits + "', '" + data.name + "');", function(result){
 			res.json({success: true, data:result});
 		});
 	}
 	else {
-		mysql.execute("update T_TEACHER set NUM_MATRICULATION='" + data.matriculation + "', NUM_CARD='"+ data.card + "', TXT_NAME='" + data.name + "' where ID = "+ data.id + ";", function(result){
+		mysql.execute("update T_SUBJECT set NUM_CODE='" + data.code + "', NUM_CREDITS='"+ data.credits + "', TXT_NAME='" + data.name + "' where ID = "+ data.id + ";", function(result){
 			res.json({success: true, data:result});
 		});
 	}

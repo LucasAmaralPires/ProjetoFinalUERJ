@@ -1,6 +1,7 @@
 var pagination = {page: 1, dataPerPage: 15};
 var totalPages = 0;
-var actualMatriculation = null;
+var actualCode = null;
+var actualName = null;
 
 $(document).ready(function(){
     searchFilter(true);
@@ -9,14 +10,14 @@ $(document).ready(function(){
 var searchFilter = function(restartPage){
 	var filter = {};
 	filter.name = $("#search-name").val();
-    filter.matriculation = $("#search-matriculation").val();
-	filter.card = $("#search-card").val();
+    filter.code = $("#search-code").val();
+	filter.credits = $("#search-credits").val();
 	if(restartPage == true)
 		pagination.page = 1;
 	filter.dataPerPage = pagination.dataPerPage;
 	filter.page = pagination.page;
 	$.blockUI();
-	$.post("/Student/getFilter", filter, function(response){
+	$.post("/Subject/getFilter", filter, function(response){
 		//console.log(response);
 		fillTable(response);
 		$.unblockUI();
@@ -25,14 +26,14 @@ var searchFilter = function(restartPage){
 
 var cleanFilter = function(){
     $("#search-name").val("");
-    $("#search-matriculation").val("");
-    $("#search-card").val("");
+    $("#search-code").val("");
+    $("#search-credits").val("");
 	searchFilter();
 };
 
 var getAll = function(){ //OBSOLETE
 	$.blockUI();
-	$.post("/Student/getAll", pagination, function(response){
+	$.post("/Subject/getAll", pagination, function(response){
 		//console.log(response)
 		fillTable(response);
 		$.unblockUI();
@@ -41,12 +42,13 @@ var getAll = function(){ //OBSOLETE
 
 var openModal = function(id){
 	clearModal();
-	$("#modalTitle").html("New Student");
-	actualMatriculation = null;
+	$("#modalTitle").html("New Subject");
+	actualCode = null;
+	actualName = null;
 	if(id != undefined){
-		$("#modalTitle").html("Edit Student");
+		$("#modalTitle").html("Edit Subject");
 		$.blockUI();
-		$.get("/Student/get/"+id, function(response){
+		$.get("/Subject/get/"+id, function(response){
 			if (response.success != true){
 				toastr.error(response.data);
 				return;
@@ -54,9 +56,10 @@ var openModal = function(id){
 			response = response.data[0];
 			$("#info-modal-id").val(response.ID);
 			$("#info-modal-name").val(response.TXT_NAME);
-			$("#info-modal-matriculation").val(response.NUM_MATRICULATION);
-			actualMatriculation = response.NUM_MATRICULATION
-			$("#info-modal-card").val(response.NUM_CARD);
+			$("#info-modal-code").val(response.NUM_CODE);
+			actualCode = response.NUM_CODE;
+			actualName = response.TXT_NAME;
+			$("#info-modal-credits").val(response.NUM_CREDITS);
 			$.unblockUI();
 		});
 	}
@@ -66,17 +69,16 @@ var openModal = function(id){
 var fillTable = function(response){
 	string = "";
     $.each(response.data, function(index, value){
-        hasCard = value.NUM_CARD != "" ? "Yes" : "No";
         string += "<tr>";
         string += "<td>" + value.TXT_NAME + "</td>";
-        string += "<td>" + value.NUM_MATRICULATION + "</td>";
-        string += "<td>" + hasCard + "</td>";
+        string += "<td>" + value.NUM_CODE + "</td>";
+        string += "<td>" + value.NUM_CREDITS + "</td>";
         string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
         string += "</tr>";
     });
     $("#tbody").html(string);
-	$("#numEntries").html("Students Found: " + response.numEntries);
+	$("#numEntries").html("Subjects Found: " + response.numEntries);
 
 	$("#actualPage").html("Page: " + pagination.page);
 	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
@@ -90,31 +92,31 @@ var closeModal = function(){
 var clearModal = function(){
 	$("#info-modal-id").val("")
 	$("#info-modal-name").val("");
-	$("#info-modal-matriculation").val("");
-	$("#info-modal-card").val("");
+	$("#info-modal-code").val("");
+	$("#info-modal-credits").val("");
 };
 
 var save = function(){
-	student = {};
-	student.id = $("#info-modal-id").val();
-	student.name = $("#info-modal-name").val();
-	student.matriculation = $("#info-modal-matriculation").val();
-	student.card = $("#info-modal-card").val();
+	subject = {};
+	subject.id = $("#info-modal-id").val();
+	subject.name = $("#info-modal-name").val();
+	subject.code = $("#info-modal-code").val();
+	subject.credits = $("#info-modal-credits").val();
 	$.blockUI();
-	$.post("/Student/checkIfExists", student, function(data, status){
+	$.post("/Subject/checkIfExists", subject, function(data, status){
 		alreadyExists = data.length > 0 ? true : false;
-		if(alreadyExists == true && actualMatriculation != student.matriculation){
-			toastr.error("The Matriculation " + student.matriculation + " already exists.");
+		if(alreadyExists == true && actualCode != subject.code && actualName != subject.name){
+			toastr.error("The Name " + subject.name + " or the Code " + subject.code + " already exists.");
 			$.unblockUI();
 			return;
 		} else{
-			$.post("/Student/save", student, function(data, status){
+			$.post("/Subject/save", subject, function(data, status){
 				if(data.success != true){
 					toastr.error(data.data);
 					$.unblockUI();
 					return;
 				}
-				toastr.success("Student " + student.name + " was saved successfuly!");
+				toastr.success("Subject " + subject.name + " was saved successfuly!");
 				$.unblockUI();
 				closeModal();
 				searchFilter(false);
@@ -124,11 +126,11 @@ var save = function(){
 };
 
 var remove = function(id){
-	bootbox.confirm("Do you want to remove this Student?", function(response){
+	bootbox.confirm("Do you want to remove this Subject?", function(response){
 		if(response != ""){
 			$.blockUI();
-			$.post("/Student/delete/"+id, id, function(data, status){
-				toastr.success("Student removed successfuly.");
+			$.post("/Subject/delete/"+id, id, function(data, status){
+				toastr.success("Subject removed successfuly.");
 				$.unblockUI();
 				searchFilter(false);
 			});

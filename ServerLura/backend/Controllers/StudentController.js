@@ -35,7 +35,7 @@ router.get('/get/:id', function(req, res){
 	var id = req.params.id;
 	mysql.execute("select * from T_STUDENT where ID = " + id + ";", function(result){
 		if(result.length == 0){
-			res.json({success:false, data:"Something is wrong. it seems like this person do not exist in the DB. Please talk to the Admin."});
+			res.json({success:false, data:"Something is wrong. it seems like this student do not exist in the DB. Please talk to the Admin."});
 		}
 		res.json({success: true, data:result});
 	});
