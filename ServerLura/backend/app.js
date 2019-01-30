@@ -27,7 +27,8 @@ app.use('/Teacher', TeacherController);
 //INDEX CALL BEGIN
 //Basically when you access the localhost:8080 you will be redirected to the index page of Lura.
 app.get('/', function(request, response){
-	response.sendfile('./static/html/index.html');
+	//response.sendfile('./static/html/index.html');
+	response.redirect('./static/html/index.html');
 });
 //INDEX CALL END
 
