@@ -26,11 +26,11 @@ app.use('/Teacher', TeacherController);
 const SubjectController = require('./Controllers/SubjectController.js');
 app.use('/Subject', SubjectController);
 
-//const ClassroomController = require('./Controllers/ClassroomController.js');
-//app.use('/Classroom', ClassroomController);
+const ClassroomController = require('./Controllers/ClassroomController.js');
+app.use('/Classroom', ClassroomController);
 
-//const ScheduleController = require('./Controllers/ScheduleController.js');
-//app.use('/Schedule', ScheduleController);
+const ScheduleController = require('./Controllers/ScheduleController.js');
+app.use('/Schedule', ScheduleController);
 
 //const ClassController = require('./Controllers/ClassController.js');
 //app.use('/Class', ClassController);

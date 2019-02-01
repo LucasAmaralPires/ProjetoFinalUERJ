@@ -1,9 +1,9 @@
 <html>
 	<head>
-		<title>Subject CRUD</title>
+		<title>Classroom CRUD</title>
 
 		<script src="../../js/jquery-3.3.1.min.js"></script>
-		<script src="../../js/Subject.js"></script>
+		<script src="../../js/Classroom.js"></script>
 		<script src="../../js/blockUI.js"></script>
 		<script src="../../js/bootbox.min.js"></script>
 
@@ -46,24 +46,24 @@
 			</nav>
 
 			<div style="margin-top:70px;" class="col-12 lura-title">
-				<h1>Subject</h1>
+				<h1>Classroom</h1>
 			</div>
 
 			<div style="margin-bottom:20px;" class="border lura-filter-box">
 				<h3 style="margin-top:20px; margin-left:20px;">Filter</h3>
 				<div style="margin-left:20px;" id="search-fields" class="form-row">
 					<div class="form-group col-3">
-            	        <label for="search-name">Name</label>
-                	    <input type="text" class="form-control" id="search-name" />
+            	        <label for="search-name">Room</label>
+                	    <input type="text" class="form-control" id="search-room" />
 	                </div>
     	            <div class="form-group col-3">
-        	            <label for="search-matriculation">Code</label>
-            	        <input type="number" min="0" class="form-control" id="search-code" />
+        	            <label for="search-matriculation">Restrict</label>
+						<select id="search-restrict" class="form-control">
+							<option value="" selected>All</option>
+							<option value=1>Yes</option>
+							<option value=0>No</option>
+						</select>
                 	</div>
-	                <div class="form-group col-3">
-    	                <label for="search-card">Credits</label>
-        	            <input type="number" min="0" class="form-control" id="search-credits" />
-            	    </div>
 				</div>
 				<div style="margin-left:20px; margin-bottom:10px;" id="search-options" class="form-row lura-filter-buttons">
 					<button style="margin-right:20px;" id="search-button-search" type="button" class="btn btn-outline-primary" onclick="searchFilter(true)">Search</button>
@@ -78,9 +78,8 @@
 				<table class="table table-striped table-bordered" style="table-layout: fixed;">
 					<thead class="thead-dark">
 						<tr>
-							<th style="width: 68%">Name</th>
-							<th style="width: 13%">Code</th>
-							<th style="width: 13%">Credits</th>
+							<th style="width: 84%">Room</th>
+							<th style="width: 10%">Is Restricted?</th>
 							<th style="width: 3%"></th>
 							<th style="width: 3%"></th>
 						</tr>
@@ -97,7 +96,7 @@
 				<div style="margin-right:5px;">Go to Page: </div>
 				<div style="margin-right:5px;"><input id="goToInput" class="form-control" type="number" min="1"></div>
 				<button style="margin-right:30px;" type="button" class="btn btn-outline-secondary" onclick="goToPage()">Go</button>
-				<button type="button" class="btn btn-outline-primary" onclick="openModal()">New Subject</button>
+				<button type="button" class="btn btn-outline-primary" onclick="openModal()">New Classroom</button>
 			</div>
 			
 			<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true">
@@ -113,16 +112,12 @@
 							<form>
 								<input type="text" class="form-control" id="info-modal-id" hidden>
 								<div class="form-group">
-									<label for="info-modal-name">Name*</label>
-									<input type="text" class="form-control" id="info-modal-name" />
+									<label for="info-modal-room">Room*</label>
+									<input type="text" class="form-control" id="info-modal-room" />
 								</div>
 								<div class="form-group">
-									<label for="info-modal-matriculation">Code*</label>
-									<input type="number" min="0" class="form-control" id="info-modal-code" />
-								</div>
-								<div class="form-group">
-									<label for="info-modal-card">Credits*</label>
-									<input type="number" min="0" class="form-control" id="info-modal-credits" />
+									<label for="info-modal-restrict">Restrict</label>
+									<input type="checkbox" class="form-control" id="info-modal-restrict" />
 								</div>
 							</form>
 						</div>
