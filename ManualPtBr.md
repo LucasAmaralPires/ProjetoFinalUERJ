@@ -14,9 +14,15 @@ __*O manual ainda está sendo desenvolvido. Ele tem como objetivo tirar todas as
       1. Módulo Wireless ESP8266
 1. Instalação
 1. Funcionalidades
+<<<<<<< HEAD
 1. Interface Gráfica do Lura
    1. Revisão Geral
    1. Funcionalidades
+=======
+1. Interface Gráfica
+   1. Banco de Dados
+   1. Entidades
+>>>>>>> 331304abd19c907bd9ff28291b1b192facf3650d
       1. Aluno
       1. Turma
       1. Auditoria
@@ -107,6 +113,18 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
   
   __*ainda sendo realizado...*__
   
+<<<<<<< HEAD
 ## 5. Interface Gráfica do Lura
 O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir sem maiores problemas.
+=======
+## 5. Interface Gráfica
+  O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir sem maiores problemas.
+  ### Banco de Dados
+  O Banco de dados Lura pode ser resumida com a seguinte imagem:
+  
+  __*Imagem do Layout do Banco de dados*__
+  
+  Existem 5 entidades principais no Lura: Student (Estudante), Teacher (Professor), Subject (Matéria), Classroom (Sala de Aula) e Schedule (Horário). Cada entidade tem a sua tela de CRUD (Create Read Update Delete), uma tela simples e intuitiva para gerenciar o que tem no banco de dados.
+  
+>>>>>>> 331304abd19c907bd9ff28291b1b192facf3650d
 __*Ainda sendo desenvolvido.*__
