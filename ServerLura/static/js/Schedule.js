@@ -1,22 +1,29 @@
 var pagination = {page: 1, dataPerPage: 15};
 var totalPages = 0;
-var actualMatriculation = null;
+var actualBegin = null;
+var actualEnd = null;
+var actualDay = null;
 
 $(document).ready(function(){
+	$('.clockpicker').clockpicker({
+		donetext: "Done",
+		autoclose: true
+	});
     searchFilter(true);
 });
 
 var searchFilter = function(restartPage){
 	var filter = {};
-	filter.name = $("#search-name").val();
-    filter.matriculation = $("#search-matriculation").val();
-	filter.card = $("#search-card").val();
+	filter.begin = $("#search-begin").val();
+	filter.end = $("#search-end").val();
+    filter.day = $("#search-day").children("option:selected").val();
+	filter.card = $("#search-description").val();
 	if(restartPage == true)
 		pagination.page = 1;
 	filter.dataPerPage = pagination.dataPerPage;
 	filter.page = pagination.page;
 	$.blockUI();
-	$.post("/Student/getFilter", filter, function(response){
+	$.post("/Schedule/getFilter", filter, function(response){
 		//console.log(response);
 		fillTable(response);
 		$.unblockUI();
@@ -24,15 +31,16 @@ var searchFilter = function(restartPage){
 };
 
 var cleanFilter = function(){
-    $("#search-name").val("");
-    $("#search-matriculation").val("");
-    $("#search-card").val("");
+    $("#search-begin").val("");
+    $("#search-end").val("");
+    $("#search-day").val("");
+	$("#search-description").val("");
 	searchFilter();
 };
 
 var getAll = function(){ //OBSOLETE
 	$.blockUI();
-	$.post("/Student/getAll", pagination, function(response){
+	$.post("/Schedule/getAll", pagination, function(response){
 		//console.log(response)
 		fillTable(response);
 		$.unblockUI();
@@ -41,22 +49,27 @@ var getAll = function(){ //OBSOLETE
 
 var openModal = function(id){
 	clearModal();
-	$("#modalTitle").html("New Student");
-	actualMatriculation = null;
+	$("#modalTitle").html("New Schedule");
+	actualBegin = null;
+	actualEnd = null;
+	actualDay = null;
 	if(id != undefined){
-		$("#modalTitle").html("Edit Student");
+		$("#modalTitle").html("Edit Schedule");
 		$.blockUI();
-		$.get("/Student/get/"+id, function(response){
+		$.get("/Schedule/get/"+id, function(response){
 			if (response.success != true){
 				toastr.error(response.data);
 				return;
 			}
 			response = response.data[0];
 			$("#info-modal-id").val(response.ID);
-			$("#info-modal-name").val(response.TXT_NAME);
-			$("#info-modal-matriculation").val(response.NUM_MATRICULATION);
-			actualMatriculation = response.NUM_MATRICULATION
-			$("#info-modal-card").val(response.NUM_CARD);
+			$("#info-modal-begin").val(response.DAT_BEGINNING);
+			$("#info-modal-end").val(response.DAT_END);
+			$("#info-modal-day").val(response.TXT_DAY);
+			actualBegin = response.DAT_BEGINNING;
+			actualEnd = response.DAT_END;
+			actualDay = response.TXT_DAY;
+			$("#info-modal-description").val(response.TXT_DESCRIPTION);
 			$.unblockUI();
 		});
 	}
@@ -66,17 +79,17 @@ var openModal = function(id){
 var fillTable = function(response){
 	string = "";
     $.each(response.data, function(index, value){
-        hasCard = value.NUM_CARD != "" ? "Yes" : "No";
         string += "<tr>";
-        string += "<td>" + value.TXT_NAME + "</td>";
-        string += "<td>" + value.NUM_MATRICULATION + "</td>";
-        string += "<td>" + hasCard + "</td>";
+        string += "<td>" + value.TXT_DAY + "</td>";
+        string += "<td>" + value.DAT_BEGINNING + "</td>";
+		string += "<td>" + value.DAT_END + "</td>";
+        string += "<td>" + value.TXT_DESCRIPTION + "</td>";
         string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
         string += "</tr>";
     });
     $("#tbody").html(string);
-	$("#numEntries").html("Students Found: " + response.numEntries);
+	$("#numEntries").html("Schedules Found: " + response.numEntries);
 
 	$("#actualPage").html("Page: " + pagination.page);
 	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
@@ -89,32 +102,36 @@ var closeModal = function(){
 
 var clearModal = function(){
 	$("#info-modal-id").val("")
-	$("#info-modal-name").val("");
-	$("#info-modal-matriculation").val("");
-	$("#info-modal-card").val("");
+	$("#info-modal-begin").val("");
+	$("#info-modal-end").val("");
+	$("#info-modal-day").val("");
+	$("#info-modal-description").val("");
 };
 
 var save = function(){
-	student = {};
-	student.id = $("#info-modal-id").val();
-	student.name = $("#info-modal-name").val();
-	student.matriculation = $("#info-modal-matriculation").val();
-	student.card = $("#info-modal-card").val();
+	schedule = {};
+	schedule.id = $("#info-modal-id").val();
+	schedule.begin = $("#info-modal-begin").val();
+	schedule.end = $("#info-modal-end").val();
+	schedule.day = $("#info-modal-day").val();
+	schedule.description = $("#info-modal-description").val();
 	$.blockUI();
-	$.post("/Student/checkIfExists", student, function(data, status){
+	$.post("/Schedule/checkIfExists", schedule, function(data, status){
 		alreadyExists = data.length > 0 ? true : false;
-		if(alreadyExists == true && actualMatriculation != student.matriculation){
-			toastr.error("The Matriculation " + student.matriculation + " already exists.");
-			$.unblockUI();
-			return;
+		if(alreadyExists == true){
+			if(data[0].ID != schedule.id){
+				toastr.error("The Schedule already exists.");
+				$.unblockUI();
+				return;
+			}
 		} else{
-			$.post("/Student/save", student, function(data, status){
+			$.post("/Schedule/save", schedule, function(data, status){
 				if(data.success != true){
 					toastr.error(data.data);
 					$.unblockUI();
 					return;
 				}
-				toastr.success("Student " + student.name + " was saved successfuly!");
+				toastr.success("Schedule was saved successfuly!");
 				$.unblockUI();
 				closeModal();
 				searchFilter(false);
@@ -124,11 +141,11 @@ var save = function(){
 };
 
 var remove = function(id){
-	bootbox.confirm("Do you want to remove this Student?", function(response){
+	bootbox.confirm("Do you want to remove this Schedule?", function(response){
 		if(response != ""){
 			$.blockUI();
-			$.post("/Student/delete/"+id, id, function(data, status){
-				toastr.success("Student removed successfuly.");
+			$.post("/Schedule/delete/"+id, id, function(data, status){
+				toastr.success("Schedule removed successfuly.");
 				$.unblockUI();
 				searchFilter(false);
 			});

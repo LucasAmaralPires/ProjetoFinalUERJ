@@ -14,7 +14,7 @@ __*O manual ainda está sendo desenvolvido. Ele tem como objetivo tirar todas as
       1. Módulo Wireless ESP8266
 1. Instalação
 1. Funcionalidades
-1. Interface Gráfica
+1. Interface Gráfica do Lura
    1. Revisão Geral
    1. Funcionalidades
       1. Aluno
@@ -24,9 +24,9 @@ __*O manual ainda está sendo desenvolvido. Ele tem como objetivo tirar todas as
 ## 1. Introdução
   O sexto andar da UERJ passou a ter (conjuntos de) salas onde um aluno necessita tocar uma campainha para poder nelas ingressar. Isso, além de claramente atrapalhar o andamento da aula, demonstra a falta de cuidado em como tratar esses pequenos problemas.  
   
-  Justamente o objetivo desse sistema é realizar um controle inteligente de acesso de pessoas sobre uma área (de uma ou mais salas) a partir da validação de cartões RFID ou de um número de matrícula (nesse projeto, matrícula da UERJ) a partir de um Arduino. Tem também uma interface gráfica capaz de adicionar, editar, deletar e visualizar informações, seja de pessoas ou de turmas.
+  O objetivo desse sistema é realizar um controle inteligente de acesso de pessoas sobre uma área (de uma ou mais salas) a partir da validação de cartões RFID ou de um número de matrícula (nesse projeto, matrícula da UERJ) a partir de um Arduino. Tem também uma interface gráfica capaz de adicionar, editar, deletar e visualizar informações, seja de pessoas ou de turmas.
   
-  A ideia é de que seja um projeto modular - não é necessário ter todas as partes para funcionar - basta utilizar o que o usuário julgar necessário para uma determinada situação.
+  O Manual sera separado em duas partes principais: A parte do Arduino e seus sensores e a outra parte o web server.
   
 ## 2. O Arduino
   O Arduino é um "uma plataforma de prototipagem eletrônica de hardware livre e de placa única, projetada com um microcontrolador" (Wikipedia).  
@@ -107,6 +107,6 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
   
   __*ainda sendo realizado...*__
   
-## 5. Interface Gráfica
+## 5. Interface Gráfica do Lura
 O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir sem maiores problemas.
 __*Ainda sendo desenvolvido.*__

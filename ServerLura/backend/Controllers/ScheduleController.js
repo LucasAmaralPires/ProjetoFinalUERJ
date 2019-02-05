@@ -10,9 +10,9 @@ var getPaginationString = function(p){
 	return s;
 };
 
-//Count how many entries Student have for pagination
+//Count how many entries Schedules have for pagination
 var getNumEntries = function(stringWhere, callback){
-	mysql.execute("select count(*) as numEntries from T_STUDENT " + stringWhere + ";", function(result){
+	mysql.execute("select count(*) as numEntries from T_SCHEDULE " + stringWhere + ";", function(result){
             callback(result[0].numEntries);
     });
 };
@@ -21,9 +21,8 @@ var getNumEntries = function(stringWhere, callback){
 router.post('/getAll', function(req, res){
 	pagination = req.body;
 	stringPag = getPaginationString(pagination);
-	stringWhere = "where DAT_REMOVED IS NULL "
-    mysql.execute("select * from T_STUDENT "+ stringWhere + stringPag + ";", function(result){
-		entries = getNumEntries(stringWhere, function(numEntries){
+    mysql.execute("select * from T_SCHEDULE "+ stringPag + ";", function(result){
+		entries = getNumEntries("", function(numEntries){
 			res.json({success:true, data:result, numEntries:numEntries});
 		});
     });
@@ -33,9 +32,9 @@ router.post('/getAll', function(req, res){
 //Get by id
 router.get('/get/:id', function(req, res){
 	var id = req.params.id;
-	mysql.execute("select * from T_STUDENT where ID = " + id + ";", function(result){
+	mysql.execute("select * from T_SCHEDULE where ID = " + id + ";", function(result){
 		if(result.length == 0){
-			res.json({success:false, data:"Something is wrong. it seems like this student do not exist in the DB. Please talk to the Admin."});
+			res.json({success:false, data:"Something is wrong. it seems like this schedule do not exist in the DB. Please talk to the Admin."});
 		}
 		res.json({success: true, data:result});
 	});
@@ -45,18 +44,23 @@ router.get('/get/:id', function(req, res){
 router.post('/getFilter', function(req, res){
 	var filter = req.body;
 	filter.pagination = {page:filter.page, dataPerPage:filter.dataPerPage}
-	string = "select * from T_STUDENT ";
-	stringWhere = " where DAT_REMOVED IS NULL ";
+	string = "select * from T_SCHEDULE ";
+	stringWhere = " where 1=1 ";
 	stringPag = getPaginationString(filter.pagination);
-	if(filter.name != null && filter.name != ""){
-		stringWhere += "and TXT_NAME LIKE '%"+ filter.name +"%'";
+
+	if(filter.begin != null && filter.begin != ""){
+		stringWhere += "and DAT_BEGINNING LIKE '%"+ filter.begin +"%'";
 	}
-	if(filter.matriculation != null && filter.matriculation != ""){
-        stringWhere += "and NUM_MATRICULATION LIKE '%"+ filter.matriculation +"%'";
+	if(filter.end != null && filter.end != ""){
+        stringWhere += "and DAT_END LIKE '%"+ filter.end +"%'";
     }
-	if(filter.card != null && filter.card != ""){
-        stringWhere += "and NUM_CARD LIKE '%"+ filter.card +"%'";
+	if(filter.day != null && filter.day != ""){
+        stringWhere += "and TXT_DAY LIKE '%"+ filter.day +"%'";
     }
+	if(filter.description != null && filter.description != ""){
+        stringWhere += "and TXT_DESCRIPTION LIKE '%"+ filter.description +"%'";
+    }
+
 	mysql.execute(string+stringWhere+stringPag+";", function(result){
 		entries = getNumEntries(stringWhere, function(numEntries){
             res.json({success:true, data:result, numEntries:numEntries});
@@ -67,15 +71,15 @@ router.post('/getFilter', function(req, res){
 //Delete (Logical) by id
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
-	mysql.execute("update T_STUDENT set DAT_REMOVED = NOW() where ID = " + id + ";", function(result){
+	mysql.execute("delete from T_SCHEDULE where ID = " + id + ";", function(result){
 		res.json(result);
 	});
 });
 
 //Check if already exists
 router.post('/checkIfExists', function(req, res){
-	student = req.body;
-	mysql.execute("select * from T_STUDENT where NUM_MATRICULATION = '" + student.matriculation + "'", function(result){
+	schedule = req.body;
+	mysql.execute("select * from T_SCHEDULE where DAT_BEGINNING = '" + schedule.begin + "' and DAT_END = '"+ schedule.end + "' and TXT_DAY = '" + schedule.day + "';", function(result){
 		res.json(result);
 	});
 });
@@ -85,23 +89,26 @@ router.post('/save', function(req, res){
 	data = req.body;
 
 	//Error Handling
-	if (data.name == null || data.name == ""){
-		res.json({success: false, data:"Name is missing."});
+	if (data.begin == null || data.begin == ""){
+		res.json({success: false, data:"Begin date is missing."});
 		return;
 	}
-	if (data.matriculation == null || data.matriculation == ""){
-        res.json({success: false, data:"Matriculation is missing."});
+	if (data.end == null || data.end == ""){
+        res.json({success: false, data:"End date is missing."});
         return;
     }
-
+	if (data.day == null || data.day == ""){
+		res.json({success: false, data:"Day is missing."});
+		return;
+	}
 
 	if(data.id == undefined || data.id == "" || data.id == null){
-		mysql.execute("insert into T_STUDENT values(0, '" + data.matriculation + "', '"+ data.card + "', '" + data.name + "', NULL);", function(result){
+		mysql.execute("insert into T_SCHEDULE values(0, '" + data.begin + "', '"+ data.end + "', '" + data.day + "', '" + data.description + "');", function(result){
 			res.json({success: true, data:result});
 		});
 	}
 	else {
-		mysql.execute("update T_STUDENT set NUM_MATRICULATION='" + data.matriculation + "', NUM_CARD='"+ data.card + "', TXT_NAME='" + data.name + "' where ID = "+ data.id + ";", function(result){
+		mysql.execute("update T_SCHEDULE set DAT_BEGINNING='" + data.begin + "', DAT_END='"+ data.end + "', TXT_DAY='" + data.day + "', TXT_DESCRIPTION='" + data.description + "' where ID = "+ data.id + ";", function(result){
 			res.json({success: true, data:result});
 		});
 	}

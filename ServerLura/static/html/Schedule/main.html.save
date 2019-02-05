@@ -142,17 +142,22 @@
             			                <option value="Sunday">Sunday</option>
                         			</select>
 								</div>
-								<div class="form-group col-3 clockpicker">
-                        			<label for="info-modal-begin">Begin*</label>
-                        			<input id="info-modal-begin" type="text" class="form-control">
-                    			</div>
-                                <div class="form-group col-3 clockpicker">
-                        			<label for="info-modal-end">End*</label>
-                        			<input id="info-modal-end" type="text" class="form-control">
-                    			</div>    
 								<div class="form-group">
-									<label for="info-modal-description">Description</label>
-									<input type="text" class="form-control" id="info-modal-description" />
+									<div class="form-group col-3 clockpicker">
+										<label for="info-modal-begin">Begin</label>
+										<input id="info-modal-begin" type="text" class="form-control">
+									</div>
+								</div>
+								<div class="form-group">
+                                    <label for="info-modal-begin">Begin</label>
+                                    <input id="info-modal-begin" data-format="hh:mm:ss" type="text"></input>
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                </div>
+								<div class="form-group">
+									<label for="info-modal-card">Description</label>
+									<input type="text" class="form-control" id="info-modal-card" />
 								</div>
 							</form>
 						</div>
