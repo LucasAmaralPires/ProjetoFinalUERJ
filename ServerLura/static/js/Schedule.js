@@ -14,8 +14,10 @@ $(document).ready(function(){
 
 var searchFilter = function(restartPage){
 	var filter = {};
-	filter.begin = $("#search-begin").val();
-	filter.end = $("#search-end").val();
+	filter.beginFrom = $("#search-begin-from").val();
+	filter.endFrom = $("#search-end-from").val();
+	filter.beginTo = $("#search-begin-to").val();
+    filter.endTo = $("#search-end-to").val();
     filter.day = $("#search-day").children("option:selected").val();
 	filter.card = $("#search-description").val();
 	if(restartPage == true)
@@ -31,8 +33,10 @@ var searchFilter = function(restartPage){
 };
 
 var cleanFilter = function(){
-    $("#search-begin").val("");
-    $("#search-end").val("");
+    $("#search-begin-from").val("");
+    $("#search-end-from").val("");
+	$("#search-begin-to").val("");
+    $("#search-end-to").val("");
     $("#search-day").val("");
 	$("#search-description").val("");
 	searchFilter();

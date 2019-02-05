@@ -48,14 +48,22 @@ router.post('/getFilter', function(req, res){
 	stringWhere = " where 1=1 ";
 	stringPag = getPaginationString(filter.pagination);
 
-	if(filter.begin != null && filter.begin != ""){
-		stringWhere += "and DAT_BEGINNING LIKE '%"+ filter.begin +"%'";
+	if(filter.beginFrom != null && filter.beginFrom != ""){
+		stringWhere += "and TIME(DAT_BEGINNING) >= TIME('"+ filter.beginFrom +"') ";
 	}
-	if(filter.end != null && filter.end != ""){
-        stringWhere += "and DAT_END LIKE '%"+ filter.end +"%'";
+	if(filter.beginTo != null && filter.beginTo != ""){
+        stringWhere += "and TIME(DAT_BEGINNING) <= TIME('"+ filter.beginTo +"') ";
     }
+
+	if(filter.endFrom != null && filter.endFrom != ""){
+        stringWhere += "and TIME(DAT_END) >= TIME('"+ filter.endFrom +"') ";
+    }
+    if(filter.endTo != null && filter.endTo != ""){
+        stringWhere += "and TIME(DAT_END) <= TIME('"+ filter.endTo +"') ";
+    }
+
 	if(filter.day != null && filter.day != ""){
-        stringWhere += "and TXT_DAY LIKE '%"+ filter.day +"%'";
+        stringWhere += "and TXT_DAY LIKE '%"+ filter.day +"%' ";
     }
 	if(filter.description != null && filter.description != ""){
         stringWhere += "and TXT_DESCRIPTION LIKE '%"+ filter.description +"%'";

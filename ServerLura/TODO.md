@@ -43,7 +43,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   
 * Schedule
   * [X] Replicar CRUD generico e adaptar
-  * [ ] Na busca, inves de ser especifico a hora inicio e hora fim, tem que ser numa range (De...Ate).
+  * [X] Na busca, inves de ser especifico a hora inicio e hora fim, tem que ser numa range (De...Ate).
   
 * Class
   * [ ] Esperar fazer todos os anteriores (para conseguir fazer os selects de cada entidade)

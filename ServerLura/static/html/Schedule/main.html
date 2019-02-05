@@ -55,15 +55,23 @@
 			<div style="margin-bottom:20px;" class="border lura-filter-box">
 				<h3 style="margin-top:20px; margin-left:20px;">Filter</h3>
 				<div style="margin-left:20px;" id="search-fields" class="form-row">
-					<div class="form-group col-3 clockpicker">
-            	        <label for="search-begin">Begin</label>
-						<input id="search-begin" type="text" class="form-control">
+					<div class="form-group col-2 clockpicker">
+            	        <label for="search-begin-from">Begin From</label>
+						<input id="search-begin-from" type="text" class="form-control">
 	                </div>
-					<div class="form-group col-3 clockpicker">
-                        <label for="search-end">End</label>
-                        <input id="search-end" type="text" class="form-control">
+					<div class="form-group col-2 clockpicker">
+                        <label for="search-begin-to">Begin To</label>
+                        <input id="search-begin-to" type="text" class="form-control">
                     </div>
-    	            <div class="form-group col-3">
+					<div class="form-group col-2 clockpicker">
+                        <label for="search-end-from">End From</label>
+                        <input id="search-end-from" type="text" class="form-control">
+                    </div>
+					<div class="form-group col-2 clockpicker">
+                        <label for="search-end-to">End To</label>
+                        <input id="search-end-to" type="text" class="form-control">
+                    </div>
+    	            <div class="form-group col-2">
         	            <label for="search-day">Day</label>
             	        <select id="search-day" class="form-control">
                             <option value="" selected>All</option>
@@ -76,7 +84,7 @@
 							<option value="Sunday">Sunday</option>
                         </select>
                 	</div>
-	                <div class="form-group col-3">
+	                <div class="form-group col-2">
     	                <label for="search-description">Description</label>
         	            <input type="text" class="form-control" id="search-description" />
             	    </div>
