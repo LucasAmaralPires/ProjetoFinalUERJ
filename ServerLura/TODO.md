@@ -34,12 +34,15 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 
 * Teacher
   * [X] Replicar Student e adaptar
+  * [ ] Uma tela (modal provavelmente) para ver quais turmas o professor participa
 
 * Subject
   * [X] Replicar CRUD generico e adaptar
+  * [ ] Uma tela (modal provavelmente) para ver quais turmas sao da materia
 
 * Classroom
   * [X] Replicar CRUD generico e adaptar
+  * [ ] Uma tela (modal provavelmente) para ver as proximas aulas (lectures) que tera na sala de aula
   
 * Schedule
   * [X] Replicar CRUD generico e adaptar
