@@ -49,8 +49,8 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Na busca, inves de ser especifico a hora inicio e hora fim, tem que ser numa range (De...Ate).
   
 * Class
-  * [ ] Esperar fazer todos os anteriores (para conseguir fazer os selects de cada entidade)
-  * [ ] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
+  * [X] Esperar fazer todos os anteriores (para conseguir fazer os selects de cada entidade)
+  * [X] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
   * [ ] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
   
 * Lecture

@@ -32,14 +32,15 @@ app.use('/Classroom', ClassroomController);
 const ScheduleController = require('./Controllers/ScheduleController.js');
 app.use('/Schedule', ScheduleController);
 
-//const ClassController = require('./Controllers/ClassController.js');
-//app.use('/Class', ClassController);
+const ClassController = require('./Controllers/ClassController.js');
+app.use('/Class', ClassController);
 
 //const LectureController = require('./Controllers/LectureController.js');
 //app.use('/Lecture', LectureController);
 
 //const AttendenceController = require('./Controllers/AttendenceController.js');
 //app.use('/Attendence', AttendenceController);
+
 //CONTROLLERS END
 
 //INDEX CALL BEGIN
