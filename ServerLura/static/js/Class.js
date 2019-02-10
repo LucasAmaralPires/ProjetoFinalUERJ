@@ -103,7 +103,7 @@ var fillTable = function(response){
         string += "<td>" + subjectName + "</td>";
         string += "<td>" + value.NUM_CLASS + "</td>";
 		string += "<td>" + value.TXT_SEMESTER + "</td>";
-		string += "<td><img style='cursor:pointer;' onclick = 'viewClass(" + value.ID  + ")' src='../../icons/cog.svg' alt='View' height='16' width='16'></td>";
+		string += "<td><a href='viewClass.html?id=" + value.ID + "'><img style='cursor:pointer;' src='../../icons/cog.svg' alt='View' height='16' width='16'></td></a>";
         string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
         string += "</tr>";
@@ -114,6 +114,10 @@ var fillTable = function(response){
 	$("#actualPage").html("Page: " + pagination.page);
 	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
 	$("#totalPage").html("/" + totalPages);
+	if(totalPages < 2)
+        $("#pagination").hide();
+    else
+        $("#pagination").show();
 };
 
 var closeModal = function(){

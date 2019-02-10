@@ -81,6 +81,10 @@ var fillTable = function(response){
 	$("#actualPage").html("Page: " + pagination.page);
 	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
 	$("#totalPage").html("/" + totalPages);
+	if(totalPages < 2)
+		$("#paginationn").hide();
+	else
+		$("#paginationn").show();
 };
 
 var closeModal = function(){
