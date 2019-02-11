@@ -10,7 +10,7 @@ var getPaginationString = function(p){
 	return s;
 };
 
-//Count how many entries Subjects have for pagination
+//Count how many entries Subject have for pagination
 var getNumEntries = function(stringWhere, callback){
 	mysql.execute("select count(*) as numEntries from T_SUBJECT " + stringWhere + ";", function(result){
             callback(result[0].numEntries);

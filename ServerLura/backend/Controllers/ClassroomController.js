@@ -17,17 +17,11 @@ var getNumEntries = function(stringWhere, callback){
     });
 };
 
-//Get all (maybe useless)
-router.post('/getAll', function(req, res){
-	pagination = req.body;
-	stringPag = getPaginationString(pagination);
-	stringWhere = "where 1=1 "
-    mysql.execute("select * from T_CLASSROOM "+ stringWhere + stringPag + ";", function(result){
-		entries = getNumEntries(stringWhere, function(numEntries){
-			res.json({success:true, data:result, numEntries:numEntries});
-		});
+//Get all
+router.get('/getAll', function(req, res){
+    mysql.execute("select * from T_CLASSROOM;", function(result){
+		res.json({success:true, data:result});
     });
-
 });
 
 //Get by id

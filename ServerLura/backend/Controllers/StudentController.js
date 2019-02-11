@@ -17,17 +17,12 @@ var getNumEntries = function(stringWhere, callback){
     });
 };
 
-//Get all (maybe useless)
-router.post('/getAll', function(req, res){
-	pagination = req.body;
-	stringPag = getPaginationString(pagination);
+//Get all
+router.get('/getAll', function(req, res){
 	stringWhere = "where DAT_REMOVED IS NULL "
-    mysql.execute("select * from T_STUDENT "+ stringWhere + stringPag + ";", function(result){
-		entries = getNumEntries(stringWhere, function(numEntries){
-			res.json({success:true, data:result, numEntries:numEntries});
-		});
+    mysql.execute("select * from T_STUDENT "+ stringWhere + ";", function(result){
+		res.json({success:true, data:result});
     });
-
 });
 
 //Get by id

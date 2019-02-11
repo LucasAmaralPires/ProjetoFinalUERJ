@@ -10,23 +10,18 @@ var getPaginationString = function(p){
 	return s;
 };
 
-//Count how many entries Schedules have for pagination
+//Count how many entries Schedule have for pagination
 var getNumEntries = function(stringWhere, callback){
 	mysql.execute("select count(*) as numEntries from T_SCHEDULE " + stringWhere + ";", function(result){
             callback(result[0].numEntries);
     });
 };
 
-//Get all (maybe useless)
-router.post('/getAll', function(req, res){
-	pagination = req.body;
-	stringPag = getPaginationString(pagination);
-    mysql.execute("select * from T_SCHEDULE "+ stringPag + ";", function(result){
-		entries = getNumEntries("", function(numEntries){
-			res.json({success:true, data:result, numEntries:numEntries});
-		});
+//Get all
+router.get('/getAll', function(req, res){
+    mysql.execute("select * from T_SCHEDULE;", function(result){
+		res.json({success:true, data:result});
     });
-
 });
 
 //Get by id
