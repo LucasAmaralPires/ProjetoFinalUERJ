@@ -19,7 +19,7 @@ var getNumEntries = function(stringWhere, callback){
 
 //Get all
 router.get('/getAll', function(req, res){
-	stringWhere = "where DAT_REMOVED IS NULL "
+	stringWhere = "where DAT_REMOVED IS NULL order by TXT_NAME"
     mysql.execute("select * from T_TEACHER "+ stringWhere + ";", function(result){
 		res.json({success:true, data:result});
     });

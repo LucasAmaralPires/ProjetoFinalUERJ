@@ -7,12 +7,13 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [X] Error Handling no Back End e nao so se basear no front.
 * [ ] Fazer um arquivo css para estilizar a base toda do server (lura.css). Ja coloquei algumas classes vazias nas div's
 * [X] Apenas aparecer a div de paginacao quando tiver mais de uma pagina
+* [ ] Praticamente todos os campos serem apenas alfanumericos (nao deixar caracteres especiais)
 
 ### Entidades
 * Student
   * StudentController.js - Fazer e implementar as requests
     * [X] /getAll - (GET) Pegar todos ***(Adaptar a Exlusão Lógica)***
-    * [X] /getByFilter - (POST) Pegar todos de acordo com o filtro
+    * [X] /getFilter - (POST) Pegar todos de acordo com o filtro
     * [X] /get/:id - (GET) Pegar um unico de acordo com id
     * [X] /save - (POST) A partir da form preenchida salvar/atualizar um (novo) registro no banco
     * [X] /delete/:id - (POST) A partir de id, deletar ***(Exclusão lógica!!!)***

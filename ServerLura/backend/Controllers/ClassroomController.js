@@ -19,7 +19,7 @@ var getNumEntries = function(stringWhere, callback){
 
 //Get all
 router.get('/getAll', function(req, res){
-    mysql.execute("select * from T_CLASSROOM;", function(result){
+    mysql.execute("select * from T_CLASSROOM order by TXT_ROOM;", function(result){
 		res.json({success:true, data:result});
     });
 });
