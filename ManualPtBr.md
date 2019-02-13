@@ -14,18 +14,10 @@ __*O manual ainda está sendo desenvolvido. Ele tem como objetivo tirar todas as
       1. Módulo Wireless ESP8266
 1. Instalação
 1. Funcionalidades
-<<<<<<< HEAD
 1. Interface Gráfica do Lura
    1. Revisão Geral
+   1. Setup
    1. Funcionalidades
-=======
-1. Interface Gráfica
-   1. Banco de Dados
-   1. Entidades
->>>>>>> 331304abd19c907bd9ff28291b1b192facf3650d
-      1. Aluno
-      1. Turma
-      1. Auditoria
 
 ## 1. Introdução
   O sexto andar da UERJ passou a ter (conjuntos de) salas onde um aluno necessita tocar uma campainha para poder nelas ingressar. Isso, além de claramente atrapalhar o andamento da aula, demonstra a falta de cuidado em como tratar esses pequenos problemas.  
@@ -113,18 +105,29 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
   
   __*ainda sendo realizado...*__
   
-<<<<<<< HEAD
 ## 5. Interface Gráfica do Lura
-O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir sem maiores problemas.
-=======
-## 5. Interface Gráfica
-  O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir sem maiores problemas.
-  ### Banco de Dados
-  O Banco de dados Lura pode ser resumida com a seguinte imagem:
-  
-  __*Imagem do Layout do Banco de dados*__
-  
-  Existem 5 entidades principais no Lura: Student (Estudante), Teacher (Professor), Subject (Matéria), Classroom (Sala de Aula) e Schedule (Horário). Cada entidade tem a sua tela de CRUD (Create Read Update Delete), uma tela simples e intuitiva para gerenciar o que tem no banco de dados.
-  
->>>>>>> 331304abd19c907bd9ff28291b1b192facf3650d
+
+### Revisao Geral
+O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir de uma forma simples e direta.
+
+### Setup
+E necessario alguns passos para fazer o Site do Lura funcionar.
+
+Primeiro e preciso instalar na maquina node.js. Alem disso, tambem instalar e configurar o MySql.
+
+Ao dar clone no repositorio, basta acessar o arquivo __*/ServerLura/backend/MySql/config.js*__ e mudar a configuracao como desejado. Alem disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__
+
+Depois disso, basta na pasta __*/ServerLura/*__ abrir o prompt de comando e escrever __*node server.js*__ para inicializar o Site do Lura.
+
+### Funcionalidades
+
+O Site disponibiliza aos professores e administradores da rede a possibilidade de gerenciar as turmas que existem no sistema, mexendo em todos os aspectos da turma. Sao eles:
+1. Alunos
+1. Professores
+1. Salas
+1. Materia
+1. Horarios
+
+Para cada aspecto da turma existe uma tela na qual o usuario pode Ver, Criar, Editar e Deletar essas entidades.
+
 __*Ainda sendo desenvolvido.*__
