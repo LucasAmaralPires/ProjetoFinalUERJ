@@ -1,0 +1,140 @@
+<html>
+	<head>
+		<title>Class CRUD</title>
+
+		<script src="../../js/jquery-3.3.1.min.js"></script>
+		<script src="../../js/Class.js"></script>
+		<script src="../../js/blockUI.js"></script>
+		<script src="../../js/bootbox.min.js"></script>
+
+		<script src="../../js/bootstrap.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">		
+
+		<script src="../../js/toastr.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/toastr.min.css">
+
+		<!-- Criar e colocar o arquivo Lura.css -->
+	</head>
+	<body>
+		<div class = "container-fluid">
+			<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+				<a class="navbar-brand" href="../index.html">Lura</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Entities
+							</a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<a class="dropdown-item" href="../Student/main.html">Student</a>
+								<a class="dropdown-item" href="../Teacher/main.html">Teacher</a>
+								<a class="dropdown-item" href="../Subject/main.html">Subject</a>
+								<a class="dropdown-item" href="../Classroom/main.html">Classroom</a>
+								<a class="dropdown-item" href="../Schedule/main.html">Schedule</a>
+								<a class="dropdown-item" href="../Class/main.html">Class</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="../Lecture/main.html">Lecture</a>
+								<a class="dropdown-item" href="../Attendence/main.html">Attendence</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<div style="margin-top:70px;" class="col-12 lura-title">
+				<h1>Class</h1>
+			</div>
+
+			<div style="margin-bottom:20px;" class="border lura-filter-box">
+				<h3 style="margin-top:20px; margin-left:20px;">Filter</h3>
+				<div style="margin-left:20px;" id="search-fields" class="form-row">
+					<div class="form-group col-3">
+            	        <label for="search-subject">Subject</label>
+                	    <input type="text" class="form-control" id="search-subject" />
+	                </div>
+    	            <div class="form-group col-3">
+        	            <label for="search-numClass">Number Class</label>
+            	        <input type="text" class="form-control" id="search-numClass" />
+                	</div>
+	                <div class="form-group col-3">
+    	                <label for="search-semester">Semester</label>
+        	            <input type="text" class="form-control" id="search-semester" />
+            	    </div>
+				</div>
+				<div style="margin-left:20px; margin-bottom:10px;" id="search-options" class="form-row lura-filter-buttons">
+					<button style="margin-right:20px;" id="search-button-search" type="button" class="btn btn-outline-primary" onclick="searchFilter(true)">Search</button>
+					<button id="search-button-clean" type="button" class="btn btn-outline-secondary" onclick="cleanFilter()">Clean</button>
+	            </div>
+			</div>
+
+			<div class="col-12">
+				<h4 id="numEntries"></h4>
+			</div>
+			<div class="col-12 lura-table">
+				<table class="table table-striped table-bordered" style="table-layout: fixed;">
+					<thead class="thead-dark">
+						<tr>
+							<th style="width: 65%">Semester</th>
+							<th style="width: 20%">Subject</th>
+							<th style="width: 6%">Number Class</th>
+							<th style="width: 3%"></th>
+							<th style="width: 3%"></th>
+							<th style="width: 3%"></th>
+						</tr>
+					</thead>
+					<tbody id="tbody">
+					</tbody>
+				</table>
+			</div>
+			<div id="pagination" class="form-row lura-pagination">
+				<button style="margin-right:5px;" type="button" class="btn btn-outline-danger btn-sm" onclick="previousPage()">-</button>
+				<button style="margin-right:5px;" type="button" class="btn btn-outline-success btn-sm" onclick="nextPage()">+</button>
+				<div id="actualPage"></div>
+				<div id="totalPage" style="margin-right:20px;"></div>
+				<div style="margin-right:5px;">Go to Page: </div>
+				<div style="margin-right:5px;"><input id="goToInput" class="form-control" type="number" min="1"></div>
+				<button style="margin-right:30px;" type="button" class="btn btn-outline-secondary" onclick="goToPage()">Go</button>
+				<button type="button" class="btn btn-outline-primary" onclick="openModal()">New Class</button>
+			</div>
+			
+			<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document"> 
+					<div class="modal-content">
+						<div class="modal-header lura-modal-header">
+							<h5 class="modal-title" id="modalTitle"></h5>
+							<button type="button" class="close" onclick="closeModal()">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body lura-modal-body">
+							<form>
+								<input type="text" class="form-control" id="info-modal-id" hidden>
+								<div class="form-group">
+									<label for="info-modal-subject">Subject*</label>
+									<input type="text" class="form-control" id="info-modal-name" />
+								</div>
+								<div class="form-group">
+									<label for="info-modal-matriculatio">Number Class*</label>
+									<input type="text" class="form-control" id="info-modal-matriculation" />
+								</div>
+								<div class="form-group">
+									<label for="info-modal-card">Semester</label>
+									<input type="text" class="form-control" id="info-modal-card" />
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer lura-modal-footer">
+							<button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
+							<button type="button" class="btn btn-outline-primary" onclick="save()">Save changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

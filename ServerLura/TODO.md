@@ -8,6 +8,8 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [ ] Fazer um arquivo css para estilizar a base toda do server (lura.css). Ja coloquei algumas classes vazias nas div's
 * [X] Apenas aparecer a div de paginacao quando tiver mais de uma pagina
 * [ ] Praticamente todos os campos serem apenas alfanumericos (nao deixar caracteres especiais)
+* [ ] Mudar a imagem do Layout do DB que se encontra na pasta Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
+* [ ] Certificar que so pode deletar uma entidade (Student, Teacher, Subject, Classroom e Schedule) quando ela nao estiver ligada a nenhuma Class.
 
 ### Entidades
 * Student
@@ -53,7 +55,8 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * Class
   * [X] Esperar fazer todos os anteriores (para conseguir fazer os selects de cada entidade)
   * [X] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
-  * [ ] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
+  * [X] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
+  * [ ] Colocar validacao do CRUD no comeco. Esta dando para fazer duas Class iguais.
   
 * Lecture
   * Esperar fazer Class

@@ -17,14 +17,10 @@ var getNumEntries = function(stringWhere, callback){
     });
 };
 
-//Get all (maybe useless)
-router.post('/getAll', function(req, res){
-	pagination = req.body;
-	stringPag = getPaginationString(pagination);
+//Get all
+router.get('/getAll', function(req, res){
     mysql.execute("select * from T_CLASS "+ stringPag + ";", function(result){
-		entries = getNumEntries("", function(numEntries){
-			res.json({success:true, data:result, numEntries:numEntries});
-		});
+		res.json({success:true, data:result, numEntries:numEntries});
     });
 
 });
@@ -40,7 +36,7 @@ router.get('/get/:id', function(req, res){
 	});
 });
 
-//Get by Filter.
+//Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;
 	filter.pagination = {page:filter.page, dataPerPage:filter.dataPerPage}
@@ -63,7 +59,7 @@ router.post('/getFilter', function(req, res){
     });
 });
 
-//Delete (Logical) by id
+//Delete by id
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
 	mysql.execute("delete from T_CLASS where ID = " + id + ";", function(result){
@@ -104,5 +100,63 @@ router.post('/save', function(req, res){
 		});
 	}
 });
+
+//Begin Foreign key
+//Get all from a specefic entity
+router.post("/getAllEntity/:entity", function(req, res){
+    var entity = req.params.entity.toUpperCase();
+	var classId = req.body.classId;
+	pagination = {page:req.body.page, dataPerPage:req.body.dataPerPage};
+	stringWhere = "where ID_CLASS = " + classId + " ";
+	stringPag = getPaginationString(pagination);
+    mysql.execute("select * from T_" + entity + "_CLASS " + stringWhere + stringPag + ";", function(result){
+		entries = getNumEntriesEntity(entity, stringWhere, function(numEntries){
+            res.json({success:true, data:result, numEntries:numEntries});
+        });
+    });
+});
+
+//Count how many entries Entity have for pagination in the Class
+var getNumEntriesEntity = function(entity, stringWhere, callback){
+    mysql.execute("select count(*) as numEntries from T_" + entity.toUpperCase() + "_CLASS " + stringWhere + ";", function(result){
+            callback(result[0].numEntries);
+    });
+};
+
+
+//Save (and only save; there is no edit)
+router.post("/saveEntity/:entity", function(req, res){
+	var entity = req.params.entity.toUpperCase();
+	var classId = req.body.classId;
+	var entityId = req.body.entityId;
+	var query = "insert into T_" + entity + "_CLASS values(0, " + entityId + ", " + classId;
+	if(entity == "STUDENT" || entity == "TEACHER"){
+		query += ", NOW()"; //DAT_ENROLLMENT
+	}
+	query += ");";
+	mysql.execute(query, function(result){
+		res.json({success:true, data:result});
+	});
+});
+//Delete
+router.post("/deleteEntity/:entity/:id", function(req, res){
+	var entity = req.params.entity;
+    var id = req.params.id;
+    mysql.execute("delete from T_" + entity.toUpperCase() + "_CLASS where ID = " + id + ";", function(result){
+        res.json(result);
+    });
+});
+//Check if exists
+router.post("/checkIfExistsEntity/:entity", function(req, res){
+    var entity = req.params.entity.toUpperCase();
+    var classId = req.body.classId;
+	var entityId = req.body.entityId;
+    mysql.execute("select * from T_" + entity + "_CLASS where ID_CLASS = " + classId + " and ID_" + entity + " = " + entityId + ";", function(result){
+        res.json(result);
+    });
+});
+
+
+//End Foreign key
 
 module.exports = router;
