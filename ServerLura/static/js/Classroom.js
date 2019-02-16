@@ -10,7 +10,6 @@ var searchFilter = function(restartPage){
 	var filter = {};
 	filter.room = $("#search-room").val();
     filter.restrict = $("#search-restrict").children("option:selected").val();
-	console.log(filter)
 	if(restartPage == true)
 		pagination.page = 1;
 	filter.dataPerPage = pagination.dataPerPage;

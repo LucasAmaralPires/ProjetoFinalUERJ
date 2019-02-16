@@ -14,7 +14,7 @@ module.exports = {
 				console.log("[" + sql + "]");
 				console.log("Com a seguinte resposta:");
 				console.log(result)
-				console.log("===END TRANSACTION===");
+				console.log("===END TRANSACTION===\n");
 				con.end();
 				return callback(result);
 			});
