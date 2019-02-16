@@ -9,7 +9,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [X] Apenas aparecer a div de paginacao quando tiver mais de uma pagina
 * [ ] Praticamente todos os campos serem apenas alfanumericos (nao deixar caracteres especiais)
 * [ ] Mudar a imagem do Layout do DB que se encontra na pasta Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
-* [ ] Certificar que so pode deletar uma entidade (Student, Teacher, Subject, Classroom e Schedule) quando ela nao estiver ligada a nenhuma Class.
+* [X] Certificar que ao deletar uma entidade (Student, Teacher, Subject, Classroom e Schedule) deletar ela em todas as Class ligadas.
 
 ### Entidades
 * Student

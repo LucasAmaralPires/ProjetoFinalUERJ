@@ -73,11 +73,21 @@ router.post('/getFilter', function(req, res){
 
 //Delete (Logical) by id
 router.post("/delete/:id", function(req, res){
-	var id = req.params.id;
-	mysql.execute("delete from T_SCHEDULE where ID = " + id + ";", function(result){
-		res.json(result);
-	});
+    var id = req.params.id;
+    deleteFromClasses(id, function(){
+        mysql.execute("delete from T_SCHEDULE where ID = " + id + ";", function(result){
+            res.json(result);
+        });
+    });
 });
+
+//Delete from every Class when deleted
+var deleteFromClasses = function(id, callback){
+    mysql.execute("delete from T_SCHEDULE_CLASS where ID_SCHEDULE=" + id + ";", function(result){
+        callback();
+    });
+};
+
 
 //Check if already exists
 router.post('/checkIfExists', function(req, res){

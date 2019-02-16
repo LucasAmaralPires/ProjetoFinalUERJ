@@ -63,9 +63,17 @@ router.post('/getFilter', function(req, res){
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
 	mysql.execute("update T_STUDENT set DAT_REMOVED = NOW() where ID = " + id + ";", function(result){
+		deleteFromClasses(id);
 		res.json(result);
 	});
 });
+
+//Delete from every Class when deleted
+var deleteFromClasses = function(id){
+	mysql.execute("delete from T_STUDENT_CLASS where ID_STUDENT=" + id + ";", function(result){
+		return;
+	});
+};
 
 //Check if already exists
 router.post('/checkIfExists', function(req, res){
