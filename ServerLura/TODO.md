@@ -8,8 +8,10 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [ ] Fazer um arquivo css para estilizar a base toda do server (lura.css). Ja coloquei algumas classes vazias nas div's
 * [X] Apenas aparecer a div de paginacao quando tiver mais de uma pagina
 * [ ] Praticamente todos os campos serem apenas alfanumericos (nao deixar caracteres especiais)
-* [ ] Mudar a imagem do Layout do DB que se encontra na pasta Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
-* [X] Certificar que ao deletar uma entidade (Student, Teacher, Subject, Classroom e Schedule) deletar ela em todas as Class ligadas.
+* [ ] Mudar a imagem do Layout do DB que se encontra na pasta /Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
+* [X] Certificar que ao deletar uma entidade (Student, Teacher, Classroom e Schedule) deletar ela em todas as Class ligadas.
+* [X] Certificar que ao deletar uma Materia (Subject) deletar ela em todas as Turmas (Class) ligadas (uma nest de mysql.execute())
+* [X] Ao deletar uma entidade (Student, Teacher, Classroom, Schedule, Subject) deixar bem claro ao usuario que ao apagar ira apagar todas as turmas referentes a essa entidade.
 
 ### Entidades
 * Student
@@ -34,19 +36,20 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
       * [X] Funcao de validacao para certificar que nao pode ter dois Students com mesma matricula/cartao
 	  * [X] Paginacao Funcional. Para isso tem que adaptar todo resultado.
   * Outros
-    * [ ] Uma tela para dizer todas as turmas (Class) na qual ele participa, alem de ver a presenca dele (Attendence). Seria acessavel no proprio CRUD. Isso so seria feito depois de ter feito todos os outros CRUDs, claro.
+    * [X] Uma tela para dizer todas as turmas (Class) na qual ele participa.
+	* [	] Conseguir ver a presenca de um Student (Attendence).
 
 * Teacher
   * [X] Replicar Student e adaptar
-  * [ ] Uma tela (modal provavelmente) para ver quais turmas o professor participa
+  * [X] Uma tela (modal provavelmente) para ver quais turmas o professor participa
 
 * Subject
   * [X] Replicar CRUD generico e adaptar
-  * [ ] Uma tela (modal provavelmente) para ver quais turmas sao da materia
+  * [X] Uma tela (modal provavelmente) para ver quais turmas sao da materia (acho que isso nao faz sentido...)
 
 * Classroom
   * [X] Replicar CRUD generico e adaptar
-  * [ ] Uma tela (modal provavelmente) para ver as proximas aulas (lectures) que tera na sala de aula
+  * [X] Uma tela (modal provavelmente) para ver as proximas aulas (lectures) que tera na sala de aula
   
 * Schedule
   * [X] Replicar CRUD generico e adaptar
@@ -57,12 +60,16 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
   * [X] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
   * [ ] Colocar validacao do CRUD no comeco. Esta dando para fazer duas Class iguais.
+  * [ ] Depois de Lecture criado, colocar na modal de insert uma data inicio e fim para criar Lectures ao criar uma turma.
   
 * Lecture
-  * Esperar fazer Class
+  * [ ] Replicar CRUD generico e adaptar
+  * [ ] No filtro ir colocando passo a passo: primeiro pergunta a materia (Subject) e depois se quiser pode filtrar por Num Class. Independente disso pode filtrar por pegar coisas passadas ou nao.
+  * [ ] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
   
 * Attendence
   * Esperar fazer Lecture
+  * [ ] Botar na tela das aulas (Lecture) as attendences de todos os alunos nas aulas PASSADAS.
 
 ### Backend
 * [ ] Deixar mais claro e mais direto o arquivo config.js na pasta MySQL para o usuário poder editar

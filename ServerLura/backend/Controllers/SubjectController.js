@@ -35,6 +35,17 @@ router.get('/get/:id', function(req, res){
 	});
 });
 
+//Get Classes by id
+router.get('/getClasses/:id', function(req, res){
+    var id = req.params.id;
+    mysql.execute("select c.ID, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER from T_CLASS c, T_SUBJECT s where c.ID_SUBJECT = s.ID and s.ID = " + id + ";", function(result){
+        if(result.length == 0)
+            res.json({success:false, data:"This Subject is not enrolled to any Class for now."});
+        else
+			res.json({success: true, data:result});
+    });
+});
+
 //Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;
@@ -61,8 +72,18 @@ router.post('/getFilter', function(req, res){
 //Delete by id
 router.post("/delete/:id", function(req, res){
 	var id = req.params.id;
-	mysql.execute("delete from T_SUBJECT where ID = " + id + ";", function(result){
-		res.json(result);
+	mysql.execute("delete from T_STUDENT_CLASS where ID_CLASS = ANY(select ID from T_CLASS where ID_SUBJECT=" + id + ");", function(result){
+		mysql.execute("delete from T_TEACHER_CLASS where ID_CLASS = ANY(select ID from T_CLASS where ID_SUBJECT=" + id + ");", function(result){
+			mysql.execute("delete from T_CLASSROOM_CLASS where ID_CLASS = ANY(select ID from T_CLASS where ID_SUBJECT=" + id + ");", function(result){
+				mysql.execute("delete from T_SCHEDULE_CLASS where ID_CLASS = ANY(select ID from T_CLASS where ID_SUBJECT=" + id + ");", function(result){
+					mysql.execute("delete from T_CLASS where ID_SUBJECT=" + id + ";", function(result){
+						mysql.execute("delete from T_SUBJECT where ID = " + id + ";", function(result){
+							res.json(result);
+						});
+					});
+				});
+			});
+		});
 	});
 });
 

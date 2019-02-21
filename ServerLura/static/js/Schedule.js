@@ -149,7 +149,7 @@ var save = function(){
 };
 
 var remove = function(id){
-	bootbox.confirm("Do you want to remove this Schedule?", function(response){
+	bootbox.confirm("Do you want to remove this Schedule?<br><br>It will be also deleted from all Classes.", function(response){
 		if(response != ""){
 			$.blockUI();
 			$.post("/Schedule/delete/"+id, id, function(data, status){

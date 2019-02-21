@@ -35,6 +35,17 @@ router.get('/get/:id', function(req, res){
 	});
 });
 
+//Get Classes by id
+router.get('/getClasses/:id', function(req, res){
+    var id = req.params.id;
+    mysql.execute("select c.ID, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER from T_CLASSROOM_CLASS cc, T_CLASS c, T_SUBJECT s where cc.ID_CLASS = c.ID and c.ID_SUBJECT = s.ID and cc.ID_CLASSROOM = " + id + ";", function(result){
+        if(result.length == 0)
+            res.json({success:false, data:"This Classroom is not enrolled to any Class for now."});
+        else
+			res.json({success: true, data:result});
+    });
+});
+
 //Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;

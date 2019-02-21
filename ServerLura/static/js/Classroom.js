@@ -67,6 +67,7 @@ var fillTable = function(response){
         string += "<tr>";
         string += "<td>" + value.TXT_ROOM + "</td>";
         string += "<td>" + isRestrict + "</td>";
+		string += "<td><img style='cursor:pointer;' onclick = 'seeClasses(" + value.ID +")' src='../../icons/menu.svg' alt='See Classes' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
         string += "</tr>";
@@ -83,8 +84,32 @@ var fillTable = function(response){
         $("#pagination").show();
 };
 
+var seeClasses = function(id){
+	$.blockUI();
+    $.get("/Classroom/getClasses/"+id, function(response){
+		if(response.success == false)
+			toastr.info(response.data);
+		else{
+			$("#tbodyClass").html(""); //Equivalente a um clearModal();
+			string = "";
+			$.each(response.data, function(index, value){
+				string += "<tr>";
+				string += "<td>" + value.TXT_NAME + "</td>";
+				string += "<td>" + value.NUM_CLASS + "</td>";
+				string += "<td>" + value.TXT_SEMESTER + "</td>";
+				string += "<td><a href='../Class/viewClass.html?id=" + value.ID + "'><img style='cursor:pointer;' src='../../icons/arrow-circle-right.svg' alt='See Class' height='16' width='16'></a></td>";
+				string += "</tr>";
+			});
+			$("#tbodyClass").html(string);
+			$("#modalClass").modal("show");
+		}
+        $.unblockUI();
+    });
+};
+
 var closeModal = function(){
 	$("#mainModal").modal("hide");
+	$("#modalClass").modal("hide");
 };
 
 var clearModal = function(){
@@ -122,7 +147,7 @@ var save = function(){
 };
 
 var remove = function(id){
-	bootbox.confirm("Do you want to remove this Classroom?", function(response){
+	bootbox.confirm("Do you want to remove this Classroom?<br><br>It will be also deleted from all Classes.", function(response){
 		if(response != ""){
 			$.blockUI();
 			$.post("/Classroom/delete/"+id, id, function(data, status){
