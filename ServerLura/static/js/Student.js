@@ -83,9 +83,9 @@ var fillTable = function(response){
 	totalPages = Math.ceil(response.numEntries/pagination.dataPerPage);
 	$("#totalPage").html("/" + totalPages);
 	if(totalPages < 2)
-		$("#paginationn").hide();
+		$("#pagination").hide();
 	else
-		$("#paginationn").show();
+		$("#pagination").show();
 };
 
 var seeClasses = function(id){
