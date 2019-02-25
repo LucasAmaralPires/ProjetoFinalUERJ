@@ -1,4 +1,4 @@
-# ToDo WebServer do Lura
+﻿# ToDo WebServer do Lura
 Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web server do Lura (tanto BackEnd quanto FrontEnd). Todas as pendencias sao de responsabilidade do Rafael Najjar(@kyros200).
 
 ### Minimamente importante
@@ -8,7 +8,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
 * [ ] Fazer um arquivo css para estilizar a base toda do server (lura.css). Ja coloquei algumas classes vazias nas div's
 * [X] Apenas aparecer a div de paginacao quando tiver mais de uma pagina
 * [ ] Praticamente todos os campos serem apenas alfanumericos (nao deixar caracteres especiais)
-* [ ] Mudar a imagem do Layout do DB que se encontra na pasta /Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
+* [X] Mudar a imagem do Layout do DB que se encontra na pasta /Diagramas na root do repositorio. Esta errada na parte do Attendence e Lecture.
 * [X] Certificar que ao deletar uma entidade (Student, Teacher, Classroom e Schedule) deletar ela em todas as Class ligadas.
 * [X] Certificar que ao deletar uma Materia (Subject) deletar ela em todas as Turmas (Class) ligadas (uma nest de mysql.execute())
 * [X] Ao deletar uma entidade (Student, Teacher, Classroom, Schedule, Subject) deixar bem claro ao usuario que ao apagar ira apagar todas as turmas referentes a essa entidade.
