@@ -60,12 +60,17 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Fazer um select para cada entidade para conseguir fazer o CRUD (talvez o /getAll finalmente seja utilizado assim)
   * [X] Fazer uma tela separada para ver a Class (ou fazer numa modal mesmo?)
   * [ ] Colocar validacao do CRUD no comeco. Esta dando para fazer duas Class iguais.
+  * [ ] Quando entra na tela ViewClass de uma Class quase nao mostra nada sobre a class em si. Botar em cima de Student/Teacher informacoes da Class (Nome da materia, Num_Class, Semester) e botoes de acoes(nao sei ainda o que seria, pode ser que nao tenha botoes afinal das contas.)
   * [ ] Depois de Lecture criado, colocar na modal de insert uma data inicio e fim para criar Lectures ao criar uma turma.
+  * [ ] Checar o botao de ver entidade. Parece que nao fiz ainda.
   
 * Lecture
-  * [ ] Replicar CRUD generico e adaptar
-  * [ ] No filtro ir colocando passo a passo: primeiro pergunta a materia (Subject) e depois se quiser pode filtrar por Num Class. Independente disso pode filtrar por pegar coisas passadas ou nao.
+  * [X] Replicar CRUD generico e adaptar
+  * [ ] Ao criar uma Lecture depois de escolher a Materia (Subject) e a turma (Class), deixar claro quais dias tem aula.
+  * [ ] Colocar validacao do CRUD. Pode ter duas aulas (Lecture) iguais.
+  * [X] No filtro ir colocando passo a passo: primeiro pergunta a materia (Subject) e depois se quiser pode filtrar por Num Class. Independente disso pode filtrar por pegar coisas passadas ou nao.
   * [ ] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
+  * [ ] Ao criar uma Lecture, nao esta prevendo se tem duas aulas no mesmo dia (so vai pegar o primeiro e desconsidera o outro). Isso sera um problema?
   
 * Attendence
   * Esperar fazer Lecture

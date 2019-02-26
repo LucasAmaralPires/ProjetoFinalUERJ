@@ -19,10 +19,9 @@ var getNumEntries = function(stringWhere, callback){
 
 //Get all
 router.get('/getAll', function(req, res){
-    mysql.execute("select * from T_CLASS "+ stringPag + ";", function(result){
-		res.json({success:true, data:result, numEntries:numEntries});
+    mysql.execute("select * from T_CLASS c, T_SUBJECT s where c.ID_SUBJECT = s.ID;", function(result){
+		res.json({success:true, data:result});
     });
-
 });
 
 //Get by id
