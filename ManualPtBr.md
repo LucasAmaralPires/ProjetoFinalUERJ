@@ -108,16 +108,23 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
 ## 5. Interface Gráfica do Lura
 
 ### Revisao Geral
-O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir de uma forma simples e direta.
+O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir de uma forma simples e direta. O site é destinado principalmente aos professores e administradores do sistema.
 
 ### Setup
-E necessario alguns passos para fazer o Site do Lura funcionar.
+É necessário alguns passos para fazer o Site do Lura funcionar.
 
-Primeiro e preciso instalar na maquina node.js. Alem disso, tambem instalar e configurar o MySql.
+Primeiro é preciso instalar na maquina Node.js. [(link)](https://nodejs.org/en/download/ "Download Node.js") 
 
-Ao dar clone no repositorio, basta acessar o arquivo __*/ServerLura/backend/MySql/config.js*__ e mudar a configuracao como desejado. Alem disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__
+Também é preciso instalar e configurar o MySql. [(Windows)](https://dev.mysql.com/downloads/windows/ "Download Mysql Windoes")
 
-Depois disso, basta na pasta __*/ServerLura/*__ abrir o prompt de comando e escrever __*node server.js*__ para inicializar o Site do Lura.
+Ao dar clone no [repositório](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/), basta acessar o arquivo __*/ServerLura/backend/MySql/config.js*__ e mudar a configuração como desejado.
+
+![Imagem Exemplo config.js]()
+Imagem - Exemplo do arquivo config.js.
+
+Além disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__
+
+Depois disso, basta na pasta __*/ServerLura/*__ abrir o prompt de comando e escrever __*"node server.js"*__ para inicializar o Site do Lura. Irá estar escrito "Server Started. Go to 'localhost:8080' in your browser"
 
 ### Funcionalidades
 
@@ -125,9 +132,9 @@ O Site disponibiliza aos professores e administradores da rede a possibilidade d
 1. Alunos
 1. Professores
 1. Salas
-1. Materia
-1. Horarios
+1. Matéria
+1. Horários
 
-Para cada aspecto da turma existe uma tela na qual o usuario pode Ver, Criar, Editar e Deletar essas entidades.
+Para cada aspecto da turma existe uma tela na qual o usuário pode Ver, Criar, Editar e Deletar essas entidades.
 
 __*Ainda sendo desenvolvido.*__
