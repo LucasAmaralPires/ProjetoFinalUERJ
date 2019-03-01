@@ -118,9 +118,9 @@ var fillTable = function(response){
         string += "<td>" + stringDate + "</td>";
         string += "<td>" + value.TXT_DAY + "</td>";
         string += "<td>" + value.DAT_BEGINNING + " - " + value.DAT_END + "</td>";
-		string += "<td><a href='../Class/viewClass.html?id=" + value.ID_CLASS + "'><img style='cursor:pointer;' src='../../icons/cog.svg' alt='View' height='16' width='16'></td></a>";
         string += "<td><img style='cursor:pointer;' onclick = 'openModal(" + value.ID + ")' src='../../icons/pencil.svg' alt='Edit' height='16' width='16'></td>";
 		string += "<td><img style='cursor:pointer;' onclick = 'remove(" + value.ID + ")' src='../../icons/trash.svg' alt='Edit' height='16' width='16'></td>";
+		string += "<td><a href='../Class/viewClass.html?id=" + value.ID_CLASS + "'><img style='cursor:pointer;' src='../../icons/cog.svg' alt='View' height='16' width='16'></td></a>";
 		string += "<td><img style='cursor:pointer;' onclick = 'seeAttendence(" + value.ID + ")' src='../../icons/document.svg' alt='Edit' height='16' width='16'></td>";
         string += "</tr>";
     });
