@@ -66,15 +66,16 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   
 * Lecture
   * [X] Replicar CRUD generico e adaptar
-  * [ ] Ao criar uma Lecture depois de escolher a Materia (Subject) e a turma (Class), deixar claro quais dias tem aula.
+  * [X] Ao criar uma Lecture depois de escolher a Materia (Subject) e a turma (Class), deixar claro quais dias tem aula (ou so deixar escolher os dias possiveis).
   * [ ] Colocar validacao do CRUD. Pode ter duas aulas (Lecture) iguais.
   * [X] No filtro ir colocando passo a passo: primeiro pergunta a materia (Subject) e depois se quiser pode filtrar por Num Class. Independente disso pode filtrar por pegar coisas passadas ou nao.
   * [ ] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
-  * [ ] Ao criar uma Lecture, nao esta prevendo se tem duas aulas no mesmo dia (so vai pegar o primeiro e desconsidera o outro). Isso sera um problema?
+  * [ ] Ao criar uma Lecture, nao esta prevendo se tem duas aulas no mesmo dia (so vai pegar o primeiro e desconsidera o outro). Generalizar um codigo para criar uma aula para cada horario do mesmo dia.
   
 * Attendence
-  * Esperar fazer Lecture
-  * [ ] Botar na tela das aulas (Lecture) as attendences de todos os alunos nas aulas PASSADAS.
+  * [ ] Attendence sera a unica Entity que nao tera uma CRUD. Ela sera populada pelo Arduino e sera vista com um botao em cada aula (Lecture)
+  * [ ] Botar na tela das aulas (Lecture) as attendences de todos os alunos que apareceram nas aulas PASSADAS.
+  * [ ] Remover o link no Menu principal Attendence (ele nao tera um CRUD)
 
 ### Backend
 * [ ] Deixar mais claro e mais direto o arquivo config.js na pasta MySQL para o usuário poder editar

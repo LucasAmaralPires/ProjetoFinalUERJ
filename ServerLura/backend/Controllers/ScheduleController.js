@@ -35,6 +35,14 @@ router.get('/get/:id', function(req, res){
 	});
 });
 
+//Get all by Class id
+router.get('/getByClass/:id', function(req, res){
+	var id = req.params.id;
+	mysql.execute("select s.* from T_SCHEDULE_CLASS sc, T_SCHEDULE s, T_CLASS c where sc.ID_SCHEDULE = s.ID and sc.ID_CLASS = c.ID and c.ID = " + id + ";", function(result){
+		res.json({success: true, data:result})
+	});
+});
+
 //Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;

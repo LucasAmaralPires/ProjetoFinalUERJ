@@ -27,9 +27,9 @@ router.get('/getAll', function(req, res){
 //Get by id
 router.get('/get/:id', function(req, res){
 	var id = req.params.id;
-	string = "select l.ID, l.DAT_DAY_OF_LECTURE, s.ID as ID_SUBJECT, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER, sch.TXT_DAY, sch.DAT_BEGINNING, sch.DAT_END"
+	string = "select l.ID, c.ID as ID_CLASS, l.DAT_DAY_OF_LECTURE, s.ID as ID_SUBJECT, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER, sch.TXT_DAY, sch.DAT_BEGINNING, sch.DAT_END"
 	string+= " from T_LECTURE l, T_SCHEDULE_CLASS sc, T_CLASS c, T_SUBJECT s, T_SCHEDULE sch";
-	string+= " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID and c.ID_SUBJECT = s.ID";
+	string+= " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID and c.ID_SUBJECT = s.ID and l.ID = " + id;
 	mysql.execute(string, function(result){
 		if(result.length == 0){
 			res.json({success:false, data:"Something is wrong. it seems like this lecture do not exist in the DB. Please talk to the Admin."});
@@ -44,6 +44,7 @@ router.post('/getFilter', function(req, res){
 	filter.pagination = {page:filter.page, dataPerPage:filter.dataPerPage}
 	string = "select l.ID, l.DAT_DAY_OF_LECTURE, sc.ID_CLASS, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER, sch.TXT_DAY, sch.DAT_BEGINNING, sch.DAT_END"
 	string+= " from T_LECTURE l, T_SCHEDULE_CLASS sc, T_CLASS c, T_SUBJECT s, T_SCHEDULE sch";
+	stringOrderBy = " order by l.DAT_DAY_OF_LECTURE, s.TXT_NAME, c.TXT_SEMESTER, c.NUM_CLASS"
 	stringWhere = " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID and c.ID_SUBJECT = s.ID";
 	stringPag = getPaginationString(filter.pagination);
 	if(filter.begin != null && filter.begin != ""){
@@ -61,7 +62,7 @@ router.post('/getFilter', function(req, res){
 	if(filter.includePast != null && filter.includePast != "" && filter.includePast == 0){
         stringWhere += " and DATE(l.DAT_DAY_OF_LECTURE) >= DATE(NOW())";
     }
-	mysql.execute(string+stringWhere+stringPag+";", function(result){
+	mysql.execute(string+stringWhere+stringOrderBy+stringPag+";", function(result){
 		entries = getNumEntries(stringWhere, function(numEntries){
             res.json({success:true, data:result, numEntries:numEntries});
         });

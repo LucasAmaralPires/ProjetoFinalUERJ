@@ -2,7 +2,7 @@ var pagination = {page: 1, dataPerPage: 15};
 var totalPages = 0;
 var subjects = [];
 var actualClass = null;
-var actualNumClass = null;
+var actualSubject = null;
 var actualDate = null;
 var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -49,7 +49,7 @@ var searchFilter = function(restartPage){
 	filter.page = pagination.page;
 	$.blockUI();
 	$.post("/Lecture/getFilter", filter, function(response){
-		console.log(response);
+		//console.log(response);
 		fillTable(response);
 		$.unblockUI();
 	});
@@ -68,7 +68,7 @@ var cleanFilter = function(){
 var getAll = function(){
 	$.blockUI();
 	$.post("/Lecture/getAll", pagination, function(response){
-		console.log(response)
+		//console.log(response)
 		fillTable(response);
 		$.unblockUI();
 	});
@@ -78,7 +78,7 @@ var openModal = function(id){
 	clearModal();
 	$("#modalTitle").html("New Lecture");
 	actualClass = null;
-	actualNumClass = null;
+	actualSubject = null;
 	actualDate = null;
 	if(id != undefined){
 		$("#modalTitle").html("Edit Lecture");
@@ -89,14 +89,19 @@ var openModal = function(id){
 				return;
 			}
 			response = response.data[0];
+			console.log(response);
 			$("#info-modal-id").val(response.ID);
 			$("#info-modal-classSubject").val(response.ID_SUBJECT);
-			$("#info-modal-numClass").val(response.NUM_CLASS);
-			actualClass = response.ID_CLASS;
-			actualNumClass = response.NUM_CLASS; //COLOCAR AQUI TMB O TXT_SEMESTER
-			actualDate = response.DAT_DAY_OF_LECTURE;
-			$("#info-modal-date").val(response.DAT_DAY_OF_LECTURE);
-			$.unblockUI();
+			fillNumClass("#info-modal-classSubject", "#info-modal-numClass", "#info-modal-numClass-toggle", function(){
+				$("#info-modal-numClass").val(response.ID_CLASS);
+				actualSubject = response.ID_SUBJECT;
+				actualClass = response.ID_CLASS;
+				date = response.DAT_DAY_OF_LECTURE.slice(0,10);
+				actualDate = date;
+				$("#info-modal-date").val(date);
+				fillInfoDays();
+				$.unblockUI();
+			});
 		});
 	}
 	$("#mainModal").modal("show");
@@ -131,7 +136,7 @@ var fillTable = function(response){
 		$("#pagination").show();
 };
 
-var fillNumClass = function(divIdFrom, divIdTo, divToggle){
+var fillNumClass = function(divIdFrom, divIdTo, divToggle, callback){
 	subjectId = $(divIdFrom).children("option:selected").val();
 	if(subjectId == ""){
 		$(divToggle).hide();
@@ -151,8 +156,27 @@ var fillNumClass = function(divIdFrom, divIdTo, divToggle){
 				string += "<option value='" + value.ID + "'>" + value.NUM_CLASS + " / " + value.TXT_SEMESTER + "</option>";
 			});
 			$(divIdTo).html(string);
+			if (typeof callback === "function") callback();
 		});
 		$(divToggle).show();
+	}
+};
+
+var fillInfoDays = function(){
+	classId = $("#info-modal-numClass").children("option:selected").val();
+    if(classId == ""){
+		$("#info-modal-infoDays").html("");
+    }
+    else{
+		$.blockUI();
+		$.get("/Schedule/getByClass/" + classId, function(response){
+			string = "<b>Class Schedules:</b><br>";
+			$.each(response.data, function(index, value){
+				string+= value.TXT_DAY + " (" + value.DAT_BEGINNING + " - " + value.DAT_END + ")<br>";
+			});
+			$("#info-modal-infoDays").html(string);
+			$.unblockUI();
+		});
 	}
 };
 
@@ -174,7 +198,7 @@ var save = function(){
 	lecture.numClass = $("#info-modal-numClass").children("option:selected").val();
 	lecture.date = $("#info-modal-date").val();
 	dateInfo = $("#info-modal-date").val().split("-");
-	date = new Date(dateInfo[0], dateInfo[1], dateInfo[2], 23, 59, 59);
+	date = new Date(dateInfo[0], dateInfo[1]-1, dateInfo[2], 23, 59, 59);
 	lecture.day = days[date.getDay()];
 	$.blockUI();
 	$.post("/Lecture/checkIfExists", lecture, function(data, status){
