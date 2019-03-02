@@ -84,7 +84,7 @@ router.post('/checkIfExists', function(req, res){
 	string+= " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID";
 	string+= " and c.ID_SUBJECT =" + lecture.classSubject;
 	string+= " and sc.ID_CLASS =" + lecture.numClass;
-	string+= " and TIME(l.DAT_DAY_OF_LECTURE) = TIME('" + lecture.date + "')";
+	string+= " and DATE(l.DAT_DAY_OF_LECTURE) = DATE('" + lecture.date + "')";
 	mysql.execute(string, function(result){
 		res.json(result);
 	});

@@ -203,7 +203,7 @@ var save = function(){
 	$.blockUI();
 	$.post("/Lecture/checkIfExists", lecture, function(data, status){
 		alreadyExists = data.length > 0 ? true : false;
-		if(alreadyExists == true){
+		if(alreadyExists == true && actualClass != lecture.classSubject && actualSubject != lecture.numClass && actualDate != lecture.date){
 			toastr.error("The Lecture already exists.");
 			$.unblockUI();
 			return;

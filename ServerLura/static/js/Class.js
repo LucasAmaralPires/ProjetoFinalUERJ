@@ -3,6 +3,7 @@ var totalPages = 0;
 var subjects = [];
 var actualSubjectId = null;
 var actualNumClass = null;
+var actualSemester = null;
 
 $(document).ready(function(){
 	getSubject(function(){
@@ -74,6 +75,7 @@ var openModal = function(id){
 	$("#modalTitle").html("New Class");
 	actualSubjectId = null;
 	actualNumClass = null;
+	actualSemester = null;
 	if(id != undefined){
 		$("#modalTitle").html("Edit Class");
 		$.blockUI();
@@ -88,6 +90,7 @@ var openModal = function(id){
 			$("#info-modal-numClass").val(response.NUM_CLASS);
 			actualSubjectId = response.ID_SUBJECT;
 			actualNumClass = response.NUM_CLASS;
+			actualSemester = response.TXT_SEMESTER;
 			$("#info-modal-semester").val(response.TXT_SEMESTER);
 			$.unblockUI();
 		});
@@ -140,8 +143,8 @@ var save = function(){
 	$.blockUI();
 	$.post("/Class/checkIfExists", data, function(entries, status){
 		alreadyExists = entries.length > 0 ? true : false;
-		if(alreadyExists == true && actualSubjectId != data.subjectId && actualNumClass != data.numClass){
-			toastr.error("The Subject " + data.subjectId + " or the Number Class "+ data.numClass + " already exists.");
+		if(alreadyExists == true && actualSubjectId != data.subjectId && actualNumClass != data.numClass && actualSemester != data.semester){
+			toastr.error("The Subject with the Number Class "+ data.numClass + " and Semester " + data.semester + " already exists.");
 			$.unblockUI();
 			return;
 		} else{

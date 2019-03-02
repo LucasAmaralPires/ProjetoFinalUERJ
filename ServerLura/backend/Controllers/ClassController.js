@@ -80,7 +80,7 @@ router.post("/delete/:id", function(req, res){
 //Check if already exists
 router.post('/checkIfExists', function(req, res){
 	data = req.body;
-	mysql.execute("select * from T_CLASS where ID_SUBJECT = '" + data.idSubject + "' and NUM_CLASS='" + data.numClass + "' and TXT_SEMESTER='" + data.semester + "'", function(result){
+	mysql.execute("select * from T_CLASS where ID_SUBJECT = '" + data.subjectId + "' and NUM_CLASS='" + data.numClass + "' and TXT_SEMESTER='" + data.semester + "'", function(result){
 		res.json(result);
 	});
 });
