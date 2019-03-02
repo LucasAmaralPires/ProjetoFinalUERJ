@@ -35,6 +35,17 @@ router.get('/get/:id', function(req, res){
 	});
 });
 
+//Get by id
+router.get('/getInfo/:id', function(req, res){
+    var id = req.params.id;
+    mysql.execute("select s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER from T_SUBJECT s, T_CLASS c where s.ID = c.ID_SUBJECT and c.ID= " + id + ";", function(result){
+        if(result.length == 0){
+            res.json({success:false, data:"Something is wrong. it seems like this class do not exist in the DB. Please talk to the Admin."});
+        }
+        res.json({success: true, data:result});
+    });
+});
+
 //Get by Filter
 router.post('/getFilter', function(req, res){
 	var filter = req.body;

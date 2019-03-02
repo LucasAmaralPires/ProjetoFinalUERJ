@@ -23,7 +23,12 @@ $(document).ready(function(){
 		prepareEntity("Student", true, function(){
 			prepareEntity("Teacher", true, function(){
 				prepareEntity("Classroom", true, function(){
-					prepareEntity("Schedule", true)
+					prepareEntity("Schedule", true, function(){
+						$.get("/Class/getInfo/"+classId, function(response){
+							console.log(response);
+							$("#title-screen").html("<b>" +response.data[0].TXT_NAME + ": " + response.data[0].NUM_CLASS + " - " + response.data[0].TXT_SEMESTER + "</b>");
+						});
+					});
 				})
 			})
 		});
@@ -98,17 +103,28 @@ var prepareEntitySelect = function(entity){
 	$("#info-modal").html(string);
 };
 
-var getEntityInfo = function(entity, data){
+var getEntityInfo = function(entity, data, entityId){
 	response = {};
-	if(entity == "Student")
-		response = students.find(x => x.ID === data.ID_STUDENT);
-    if(entity == "Teacher")
-        response = teachers.find(x => x.ID === data.ID_TEACHER);
-    if(entity == "Classroom")
-        response = classrooms.find(x => x.ID === data.ID_CLASSROOM);
-    if(entity == "Schedule")
-        response = schedules.find(x => x.ID === data.ID_SCHEDULE);
-
+	if(data != null){
+		if(entity == "Student")
+			response = students.find(x => x.ID === data.ID_STUDENT);
+		if(entity == "Teacher")
+			response = teachers.find(x => x.ID === data.ID_TEACHER);
+		if(entity == "Classroom")
+			response = classrooms.find(x => x.ID === data.ID_CLASSROOM);
+		if(entity == "Schedule")
+			response = schedules.find(x => x.ID === data.ID_SCHEDULE);
+	}
+	else if(entityId != null || entityId != undefined){
+		if(entity == "Student")
+            response = students.find(x => x.ID === entityId);
+        if(entity == "Teacher")
+            response = teachers.find(x => x.ID === entityId);
+        if(entity == "Classroom")
+            response = classrooms.find(x => x.ID === entityId);
+        if(entity == "Schedule")
+            response = schedules.find(x => x.ID === entityId);
+	}
 	return response;
 };
 
@@ -130,7 +146,6 @@ var fillTable = function(entity, response){
             string += "<td>" + entityInfo.TXT_DAY + "</td>";
             string += "<td>" + entityInfo.DAT_BEGINNING + " - " + entityInfo.DAT_END + "</td>";
 		}
-        string += "<td><img style='cursor:pointer;' onclick = 'viewEntity(\"" + entity + "\", " + entityInfo.ID + ")' src='../../icons/cog.svg' alt='View' height='16' width='16'></td>";
         string += "<td><img style='cursor:pointer;' onclick = 'remove(\"" + entity + "\", " + value.ID + ")' src='../../icons/trash.svg' alt='Delete' height='16' width='16'></td>";
         string += "</tr>";
     });
