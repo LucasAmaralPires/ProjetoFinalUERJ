@@ -189,6 +189,8 @@ var clearModal = function(){
 	$("#info-modal-classSubject").val("");
 	$("#info-modal-numClass").val("");
 	$("#info-modal-date").val("");
+	$("#info-modal-infoDays").html("");
+	$("#info-modal-numClass-toggle").hide();
 };
 
 var save = function(){

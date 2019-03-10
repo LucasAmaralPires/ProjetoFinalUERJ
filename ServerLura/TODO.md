@@ -63,13 +63,15 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Quando entra na tela ViewClass de uma Class quase nao mostra nada sobre a class em si. Botar em cima de Student/Teacher informacoes da Class (Nome da materia, Num_Class, Semester) e botoes de acoes(nao sei ainda o que seria, pode ser que nao tenha botoes afinal das contas.)
   * [X] Checar o botao de ver entidade. Parece que nao fiz ainda. (Achei o botao inutil entao tirei ele)
   * [ ] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
+  * [ ] Ao apagar uma Turma (Class) tem que tambem apagar todas as aulas (Lectures) e consequentemente Presenca (Attendence).
   
 * Lecture
   * [X] Replicar CRUD generico e adaptar
   * [X] Ao criar uma Lecture depois de escolher a Materia (Subject) e a turma (Class), deixar claro quais dias tem aula (ou so deixar escolher os dias possiveis).
   * [X] Colocar validacao do CRUD. Pode ter duas aulas (Lecture) iguais.
   * [X] No filtro ir colocando passo a passo: primeiro pergunta a materia (Subject) e depois se quiser pode filtrar por Num Class. Independente disso pode filtrar por pegar coisas passadas ou nao.
-  * [ ] Ao criar uma Lecture, nao esta prevendo se tem duas aulas no mesmo dia (so vai pegar o primeiro e desconsidera o outro). Generalizar um codigo para criar uma aula para cada horario do mesmo dia.
+  * [ ] Ao criar uma Lecture, nao esta prevendo se tem duas aulas no mesmo dia (so vai pegar o primeiro e desconsidera o outro). Generalizar um codigo para criar uma aula para cada horario do mesmo dia. Realmente nao sei como isso iria funcionar porque ao editar uma das aulas vai editar todas do mesmo dia.
+  * [X] Clear Modal falta dar clear na parte dos horarios de aula e esconder selecao da turma.
   
 * Attendence
   Attendence sera a unica Entity que nao tera uma CRUD. Ela sera populada pelo Arduino e sera vista com um botao em cada aula (Lecture).
