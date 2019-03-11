@@ -3,6 +3,7 @@
 #include <RF24Network.h>
 #include <MFRC522.h>
 #include <LiquidCrystal.h>
+#include <EEPROM.h>
 #define red 45
 #define blue 47
 #define green 46
@@ -50,7 +51,14 @@ void setup()
   Serial.println();
 }
 
-void wireless()
+void wireless_write(char[] env)
+{
+    SPI.being();
+    //Send Code
+    SPI.end();
+}
+
+void wireless_read()
 {
     SPI.begin();
     network.update();
@@ -64,62 +72,152 @@ void wireless()
     SPI.end();
 }
 
-void loop() 
+void imprime_linha_coluna(int x, int y)
 {
-    new_time = millis();
-    wireless();
-    for (int ti = 3; ti<7; ti++)
-    {
-      if(dig_mat == false)
+  switch(x)
+  {
+    case 1:
+      switch(y)
       {
-        SPI.begin();      // Inicia  SPI bus
-        if (mfrc522.PICC_IsNewCardPresent()) 
-        {
-          if (mfrc522.PICC_ReadCardSerial()) 
+        case 1:
+          digt[cont_di++] = '1';
+          break;
+        case 2:
+          digt[cont_di++] = '2';
+          break;
+        case 3:
+          digt[cont_di++] = '3';
+          break;
+      }
+      break;
+    case 2:
+      switch(y)
+      {
+        case 1:
+          digt[cont_di++] = '4';
+          break;
+        case 2:
+          digt[cont_di++] = '5';
+          break;
+        case 3:
+          digt[cont_di++] = '6';
+          break;
+      }
+      break;
+    case 3:
+      switch(y)
+      {
+        case 1:
+          digt[cont_di++] = '7';
+          break;
+        case 2:
+          digt[cont_di++] = '8';
+          break;
+        case 3:
+          digt[cont_di++] = '9';
+          break;
+      }
+      break;
+    case 4:
+      switch(y)
+      {
+        case 1:
+          for(int i = 0;i<cont_di;i++)
           {
+            digt[i] = 0;
+          }
+          cont_di = 0;
+          break;
+        case 2:
+          digt[cont_di++] = '0';
+          break;
+        case 3:
+          if(cont_di != 0)
+          {
+            Serial.println(digt);
+            wireless_write(digt);
+            delay(1000);
+            for(int i = 0;i<cont_di;i++)
+            {
+              digt[i] = 0;
+            }
+            cont_di = 0;
+          }
+          else
+          {
+            Serial.println("!");
+          }
+          break;
+      }
+      break;
+  }
+}
+
+void read_matrix()
+{
+    //Alterna o estado dos pinos das linhas
+    digitalWrite(3, LOW);
+    digitalWrite(4, LOW);
+    digitalWrite(5, LOW);
+    digitalWrite(6, LOW);
+    digitalWrite(ti, HIGH);
+    //Verifica se alguma tecla da coluna 1 foi pressionada
+    if (digitalRead(7) == HIGH)
+    {
+        imprime_linha_coluna(ti-2, 1);
+        while(digitalRead(7) == HIGH){}
+    }
+    //Verifica se alguma tecla da coluna 2 foi pressionada    
+    if (digitalRead(2) == HIGH)
+    {
+        imprime_linha_coluna(ti-2, 2);
+        while(digitalRead(2) == HIGH){};
+    }   
+    //Verifica se alguma tecla da coluna 3 foi pressionada
+    if (digitalRead(8) == HIGH)
+    {
+        imprime_linha_coluna(ti-2, 3);
+        while(digitalRead(8) == HIGH){}
+    }
+}
+
+void read_card()
+{
+    SPI.begin();      // Inicia  SPI bus
+    if (mfrc522.PICC_IsNewCardPresent()) 
+    {
+        if (mfrc522.PICC_ReadCardSerial()) 
+        {
             String conteudo= "";
             byte letra;
             for (byte i = 0; i < mfrc522.uid.size; i++) 
             {
-              Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
-              Serial.print(mfrc522.uid.uidByte[i], HEX);
+              //Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
+              //Serial.print(mfrc522.uid.uidByte[i], HEX);
               conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : ""));
               conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
             }
+            //TESTE PARA FAZER Serial.println(conteudo);
             Serial.println();
-          }
-          delay(1000);
         }
-        SPI.end();
+        delay(1000);
+    }
+    SPI.end();
+}
+
+void loop() 
+{
+    new_time = millis();
+    wireless_read();
+    for (int ti = 3; ti<7; ti++)
+    {
+      if(dig_mat == false)
+      {
+        read_card();
       }  
       if(ins_cartao == false)
       {
-        //Alterna o estado dos pinos das linhas
-        digitalWrite(3, LOW);
-        digitalWrite(4, LOW);
-        digitalWrite(5, LOW);
-        digitalWrite(6, LOW);
-        digitalWrite(ti, HIGH);
-        //Verifica se alguma tecla da coluna 1 foi pressionada
-        if (digitalRead(7) == HIGH)
-        {
-          imprime_linha_coluna(ti-2, 1);
-          while(digitalRead(7) == HIGH){}
-        }
-    
-        //Verifica se alguma tecla da coluna 2 foi pressionada    
-        if (digitalRead(2) == HIGH)
-        {
-          imprime_linha_coluna(ti-2, 2);
-          while(digitalRead(2) == HIGH){};
-        }
-       
-        //Verifica se alguma tecla da coluna 3 foi pressionada
-        if (digitalRead(8) == HIGH)
-        {
-          imprime_linha_coluna(ti-2, 3);
-          while(digitalRead(8) == HIGH){}
-        }
+          read_matrix();
       }   
     }
 /*    delay(10);
@@ -255,85 +353,4 @@ void loop()
       dig_mat = false;
       lcd.clear();
     }*/
-}
-
-void imprime_linha_coluna(int x, int y)
-{
-//  Serial.println();
-  switch(x)
-  {
-    case 1:
-      switch(y)
-      {
-        case 1:
-          digt[cont_di++] = '1';
-          break;
-        case 2:
-          digt[cont_di++] = '2';
-          break;
-        case 3:
-          digt[cont_di++] = '3';
-          break;
-      }
-      break;
-    case 2:
-      switch(y)
-      {
-        case 1:
-          digt[cont_di++] = '4';
-          break;
-        case 2:
-          digt[cont_di++] = '5';
-          break;
-        case 3:
-          digt[cont_di++] = '6';
-          break;
-      }
-      break;
-    case 3:
-      switch(y)
-      {
-        case 1:
-          digt[cont_di++] = '7';
-          break;
-        case 2:
-          digt[cont_di++] = '8';
-          break;
-        case 3:
-          digt[cont_di++] = '9';
-          break;
-      }
-      break;
-    case 4:
-      switch(y)
-      {
-        case 1:
-          for(int i = 0;i<cont_di;i++)
-          {
-            digt[i] = 0;
-          }
-          cont_di = 0;
-          break;
-        case 2:
-          digt[cont_di++] = '0';
-          break;
-        case 3:
-          if(cont_di != 0)
-          {
-            Serial.println(digt);
-            delay(1000);
-            for(int i = 0;i<cont_di;i++)
-            {
-              digt[i] = 0;
-            }
-            cont_di = 0;
-          }
-          else
-          {
-            Serial.println("!");
-          }
-          break;
-      }
-      break;
-  }
 }
