@@ -14,13 +14,15 @@ LiquidCrystal lcd(48, 49, 50, 51, 52, 53);
 MFRC522 mfrc522(SS_PIN, RST_PIN);   
 RF24 radio(12,11);               
 RF24Network network(radio);
-    
+
+const uint16_t node01 = 01;       
 const uint16_t this_node = 01;
 char st[20];
 char digt[15];
 int cont_di;
 long old_time, new_time;
 bool ins_cartao,dig_mat;
+String classroom = "6000";
 
 void setup() 
 {
@@ -51,10 +53,18 @@ void setup()
   Serial.println();
 }
 
-void wireless_write(char[] env)
+void wireless_write(String env)
 {
-    SPI.being();
-    //Send Code
+    char send_t[24];
+    String text = classroom + env;
+    text.toCharArray(send_t,24);
+    SPI.begin();
+    network.update();
+    RF24NetworkHeader header(node01);
+    Serial.println("Enviando mensagem.");
+    bool ok = network.write(header, send_t, 24);
+    Serial.println("Mensagem enviada.");
+    delay(100);
     SPI.end();
 }
 
@@ -135,7 +145,7 @@ void imprime_linha_coluna(int x, int y)
           if(cont_di != 0)
           {
             Serial.println(digt);
-            wireless_write(digt);
+            wireless_write(String(digt));
             delay(1000);
             for(int i = 0;i<cont_di;i++)
             {
@@ -153,7 +163,7 @@ void imprime_linha_coluna(int x, int y)
   }
 }
 
-void read_matrix()
+void read_matrix(int ti)
 {
     //Alterna o estado dos pinos das linhas
     digitalWrite(3, LOW);
@@ -188,17 +198,20 @@ void read_card()
     {
         if (mfrc522.PICC_ReadCardSerial()) 
         {
-            String conteudo= "";
-            byte letra;
+            String conteudo = "";
+  //          char cont[24];
+            byte letra,j = 0;
             for (byte i = 0; i < mfrc522.uid.size; i++) 
             {
-              //Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
-              //Serial.print(mfrc522.uid.uidByte[i], HEX);
+            //  Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : "");
+            //  Serial.print(mfrc522.uid.uidByte[i], HEX);
               conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : ""));
               conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
             }
-            //TESTE PARA FAZER Serial.println(conteudo);
-            Serial.println();
+//            conteudo.toCharArray(cont,24);
+            wireless_write(conteudo);
+            Serial.println(conteudo);
+            //Serial.println();
         }
         delay(1000);
     }
@@ -217,7 +230,7 @@ void loop()
       }  
       if(ins_cartao == false)
       {
-          read_matrix();
+        read_matrix(ti);
       }   
     }
 /*    delay(10);
