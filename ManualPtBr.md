@@ -5,45 +5,64 @@ __*O manual ainda está sendo desenvolvido. Ele tem como objetivo tirar todas as
 
 ## 0. Índice
 1. Introdução
+1. O Banco de Dados
 1. O Arduino
-   1. Módulos
-      1. Teclado Matricial de 12 teclas
-      1. Leitor de cartão RFID
-      1. Tela LCD
-      1. LED de 3 Cores
-      1. Módulo Wireless ESP8266
-1. Instalação
-1. Funcionalidades
-1. Interface Gráfica do Lura
-   1. Revisão Geral
-   1. Setup
-   1. Funcionalidades
+  1. Módulos
+     * Teclado Matricial de 12 teclas
+     * Leitor de cartão RFID
+     * Tela LCD
+     * LED de 3 Cores
+     * Módulo Wireless ESP8266
+  1. Instalação
+  1. Funcionalidades
+1. Site do Lura
+   * Revisão Geral
+   * Setup
+   * Telas CRUD
+   * Tela da Turma
+   * CRUD da Aula
+   * Conclusão e Futuro
 
 ## 1. Introdução
-  O sexto andar da UERJ passou a ter (conjuntos de) salas onde um aluno necessita tocar uma campainha para poder nelas ingressar. Isso, além de claramente atrapalhar o andamento da aula, demonstra a falta de cuidado em como tratar esses pequenos problemas.  
+O sexto andar da UERJ passou a ter (conjuntos de) salas onde um aluno necessita tocar uma campainha para poder nelas ingressar. Isso, além de claramente atrapalhar o andamento da aula, demonstra a falta de cuidado em como tratar esses pequenos problemas.  
   
-  O objetivo desse sistema é realizar um controle inteligente de acesso de pessoas sobre uma área (de uma ou mais salas) a partir da validação de cartões RFID ou de um número de matrícula (nesse projeto, matrícula da UERJ) a partir de um Arduino. Tem também uma interface gráfica capaz de adicionar, editar, deletar e visualizar informações, seja de pessoas ou de turmas.
+O objetivo desse sistema é realizar um controle inteligente de acesso de pessoas sobre uma área (de uma ou mais salas) a partir da validação de cartões RFID ou de um número de matrícula (nesse projeto, matrícula da UERJ) a partir de um Arduino com diversos sensores. Tem também um Site do Lura capaz de adicionar, editar, deletar e visualizar informações para gerir as Turmas de jeito fácil e conciso.
   
-  O Manual sera separado em duas partes principais: A parte do Arduino e seus sensores e a outra parte o web server.
+O Manual sera separado em três partes principais: Primeiro o Banco de Dados e partir disso a parte do Arduino e seus sensores e a outra parte o Site do  Sistema Lura.
+
+## 2. O Banco de Dados
+O Banco de Dados (BD) apresenta o seguinte Layout:
+
+![Imagem Layout BD](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/blob/master/Diagramas/BD_Lura_Layout.png)
+
+E ele participa nas duas partes principais do Sistema Lura (que são os dois próximos pontos desse Manual):
+
+**A primeira parte é a comunicação dos Arduinos com o BD**, onde os Alunos e Professores passam o cartão ou digita a Matrícula para conseguir acessar a Sala. Para tal, é realizado três operações principais:
+
+  * Verifica se, dada a hora atual, está tendo Aula naquela Sala;
+  * Verifica se o Aluno participa da Turma;
+  * Realiza a presença do Aluno se as duas últimas operações forem bem sucedidas.
   
-## 2. O Arduino
-  O Arduino é um "uma plataforma de prototipagem eletrônica de hardware livre e de placa única, projetada com um microcontrolador" (Wikipedia).  
+**Já a segunda parte é um Site do próprio Lura** para que os Professores e Administradores do Sistema consigam gerenciar tudo do Sistema, desde Alunos até Turmas.
+
+## 3. O Arduino
+O Arduino é um "uma plataforma de prototipagem eletrônica de hardware livre e de placa única, projetada com um microcontrolador" (Wikipedia).  
+
+A ideia do Lura é de que tenha um Arduino para cada Sala do Sistema, equipado com diversos sensores. Assim ele consegue comunicar com o Banco de Dados e dizer para o usuários o que está acontecendo.
+
+Junto com sensores, faz a interação com o usuário diretamente. Ele tem o direito de tanto passar o cartão ou digitar a matrícula para acessar a Sala e tem uma tela LCD e/ou uma luz LED para alertá-lo.
+
+Lura é compatível apenas com o Arduino Mega 2560.
   
-  Lura é compatível apenas com o Arduino Mega 2560 (Arduino Uno pode ser utilizado opcionalmente como Arduino Mestre).
-  
-  __*foto Arduino Mega 2560*__
-  
-  Junto com sensores, faz a interação com o usuário diretamente. Ele tem o direito de tanto passar o cartão ou digitar a matrícula para acessar a Sala e tem uma tela LCD e/ou uma luz LED para alertá-lo.
+![Imagem Arduino Mega 2560]()
   
 ### Módulos
-O Lura é um projeto modular, ou seja, pode-se fazer o projeto de acordo com os módulos de sua preferência. Existem módulos para inserir informações (teclado matricial e leitor de cartão RFID) e para notificar o usuário o que está acontecendo (Tela LCD e LED 3 cores). O único módulo obrigatório é o Módulo Wireless nrf24l01 para os Arduinos Vassalos comunicarem com o Arduino Mestre.
+O Arduino terá instalado diversos módulos para inserir informações (teclado matricial e leitor de cartão RFID) e para notificar o usuário o que está acontecendo (Tela LCD e LED 3 cores). Além disso terá o Módulo Wireless nrf24l01 para os Arduinos Vassalos comunicarem com o Arduino Mestre.
 
-Com os módulos escolhidos, basta seguir a pinagem de acordo com os seguintes mapas de cada tipo de Arduino:
+Com os módulos escolhidos, basta seguir a pinagem de acordo com os seguintes mapas do Arduino Mega 2560:
 
-![Imagem Pinagem Arduino Mega](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/blob/master/Vers%C3%A3o%201.0/Imagem%20da%20pinagem%20-%20MEGA.png)
-Imagem 1 - Pinagem de cada módulo quando utilizando um Arduino Mega 2560
-
-__*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
+![Imagem Pinagem Arduino Mega](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/blob/master/Diagramas/pinagemMEGA.png)
+Imagem - Pinagem de cada módulo quando utilizando um Arduino Mega 2560
 
 #### Teclado Matricial de 12 teclas
 
@@ -75,12 +94,11 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
    
    O único módulo obrigatório, é necessário para estabelecer a comunicação dos Arduinos Vassalos com o Arduino Mestre.
    
-## 3. Instalação
+### 3. Instalação
 
-  __*Ainda será desenvolvido essa parte, tanto para os Arduinos Vassalos quanto para o Arduino Mestre, além do computador que terá o banco de dados.*__
+  __*Ainda será desenvolvido essa parte, tanto para os Arduinos Vassalos quanto para o Arduino Mestre, além do computador que terá o BD.*__
 
-## 4. Funcionalidades
-  
+### 4. Funcionalidades
   No Lura, os Arduinos Vassalos e o Arduino Mestre se comunicam de uma forma bem simples para que o computador faça todo o trabalho de consulta no Banco de Dados do Sistema. O usuário irá interagir apenas com os Arduinos Vassalos (seja pelo Teclado Matricial ou pelo leitor de cartão RFID para inserir informações e receberá a resposta pela tela LCD ou pelo LED de 3 cores) de forma simples e prático.
   
   No Lura existe 3 perfis de usuários diferentes: Aluno, Professor e Administrador.
@@ -105,8 +123,7 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
   
   __*ainda sendo realizado...*__
   
-## 5. Interface Gráfica do Lura
-
+## 4. Site do Lura
 ### Revisão Geral
 O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o Sistema Lura, podendo gerir de uma forma simples e direta. O site é destinado principalmente aos professores e administradores do sistema.
 
@@ -121,7 +138,7 @@ Ao dar clone no [Repositório](https://github.com/LucasAmaralPIres/ProjetoFinalU
 
 ![Imagem Exemplo config.js]()
 
-Além disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__
+Além disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__. Para isso basta no MySQL usar o comando ***source***, como descrito na próxima imagem.
 
 ![Imagem Executando DBscript.sql]()
 
