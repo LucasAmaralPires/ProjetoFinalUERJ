@@ -107,34 +107,77 @@ __*Imagem da pinagem do Arduino Uno caso queira usar ele como Arduino Mestre*__
   
 ## 5. Interface Gráfica do Lura
 
-### Revisao Geral
-O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o sistema, podendo gerir de uma forma simples e direta. O site é destinado principalmente aos professores e administradores do sistema.
+### Revisão Geral
+O computador que está conectado ao Banco de Dados tem o direito de acessar pelo navegador da Web o Sistema Lura, podendo gerir de uma forma simples e direta. O site é destinado principalmente aos professores e administradores do sistema.
 
 ### Setup
 É necessário alguns passos para fazer o Site do Lura funcionar.
 
-Primeiro é preciso instalar na maquina Node.js. [(link)](https://nodejs.org/en/download/ "Download Node.js") 
+Primeiro é preciso instalar no computador Node.js. [(Link)](https://nodejs.org/en/download/ "Download Node.js") 
 
-Também é preciso instalar e configurar o MySql. [(Windows)](https://dev.mysql.com/downloads/windows/ "Download Mysql Windoes")
+Também é preciso instalar e configurar o MySql. [(Windows)](https://dev.mysql.com/downloads/windows/ "Download Mysql no Windows") [(Linux)](https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/ "Download Mysql no Linux")
 
-Ao dar clone no [repositório](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/), basta acessar o arquivo __*/ServerLura/backend/MySql/config.js*__ e mudar a configuração como desejado.
+Ao dar clone no [Repositório](https://github.com/LucasAmaralPIres/ProjetoFinalUERJ/ "Link para o Repositório do GitHub"), basta acessar o arquivo __*/ServerLura/backend/MySql/config.js*__ e mudar a configuração de usuário e senha do MySQL.
 
 ![Imagem Exemplo config.js]()
-Imagem - Exemplo do arquivo config.js.
 
 Além disso, basta no MySql executar o script __*/Diagramas/DBscript.sql*__
 
-Depois disso, basta na pasta __*/ServerLura/*__ abrir o prompt de comando e escrever __*"node server.js"*__ para inicializar o Site do Lura. Irá estar escrito "Server Started. Go to 'localhost:8080' in your browser"
+![Imagem Executando DBscript.sql]()
 
-### Funcionalidades
+Depois disso, basta na pasta __*/ServerLura/*__ abrir o prompt de comando e escrever __*"node server.js"*__ para inicializar o Site do Lura. Irá estar escrito "Server Started. Go to 'localhost:8080' in your browser".
 
-O Site disponibiliza aos professores e administradores da rede a possibilidade de gerenciar as turmas que existem no sistema, mexendo em todos os aspectos da turma. Sao eles:
+![Imagem Executando node server.js]()
+
+### Telas CRUDs
+
+O Site disponibiliza aos professores e administradores da rede a possibilidade de gerenciar as Turmas que existem no sistema, mexendo em todos os aspectos da Turma. São eles:
+
 1. Alunos
 1. Professores
 1. Salas
 1. Matéria
 1. Horários
 
-Para cada aspecto da turma existe uma tela na qual o usuário pode Ver, Criar, Editar e Deletar essas entidades.
+Para cada aspecto da Turma existe uma tela na qual o usuário pode Ver, Criar, Editar e Deletar (*chamada de CRUD: Create, Read, Update and Delete*) essas entidades.
 
-__*Ainda sendo desenvolvido.*__
+![Imagem Exemplo CRUD de Estudante]()
+
+Todas as telas CRUD no sistema Lura têm:
+ 
+  * Um campo para filtrar a tabela de resultados;
+  * Uma tabela com a lista de resultados da busca, com as principais informações da entidade com botões para editar, deletar e ver mais;
+  * Um campo de paginação para ficar navegando entre as páginas de resultado (caso tenha mais de uma página);
+  * Um botão que leva a uma nova janela para criar uma instância nova da entidade.
+
+### Tela da Turma
+
+A tela da Turma é uma tela CRUD, porém por ser mais complexa existe um botão que direciona para a tela da Turma, onde você pode incluir ou apagar Alunos, Professores, Salas de aula e Horários.
+
+![Imagem Exemplo CRUD de Turma]()
+
+![Imagem Exemplo Tela da Turma]()
+
+Particularmente na parte dos Alunos, é possível verificar a presença deles **para as Aulas que já aconteceram**.
+
+![Imagem Exemplo Presença de um Aluno na Turma]()
+
+É possível na tela da Turma no botão "Criar aulas". Ao aparecer uma janela, basta dizer quando quer as aulas entre duas datas. Feito isso será criado aulas durante todo o período definido.
+
+![Imagem Exemplo Criar Aulas para a Turma]()
+
+### CRUD da Aula
+
+Nessa tela mostrará todas as aulas cadastradas no Lura. Na tela da Turma é possível já criar uma massa de aulas para maior praticidade do professor, porém é possível criar uma Aula selecionando uma matéria e logo depois a turma. Perceba que só é possível criar a Aula caso a data esteja de acordo com os horários da turma (Ex: Não é possível criar uma Aula na Quinta-feira quando a turma tem aula às segundas e quartas).
+
+![Imagem Exemplo Criando uma Aula]()
+
+As aulas que **já passaram** têm a possibilidade de ver a Presença dos Alunos.
+
+![Imagem Exemplo Presença dos Alunos em uma Aula]()
+
+### Conclusão e Futuro
+
+O Site foi feito principalmente para funcionar junto com a parte principal do Lura: Possibilitar que os alunos entrem na sala de aula de uma maneira mais conveniente e que faça a presença automaticamente.
+
+O Site por si só tenta ser o mais direto para os usuários para poderem gerir as Turmas, porém existem melhorias possíveis que poderiam ser feitos para melhorar a consistência e facilidade do Sistema como um todo.
