@@ -1,5 +1,6 @@
 classId = window.location.search.substring(4);
 actualEntity = "";
+classSchedules = {classId: classId, page: 1, dataPerPage: 999};
 
 var pagination = {};
 pagination.student = {page: 1, dataPerPage: 5};
@@ -25,7 +26,7 @@ $(document).ready(function(){
 				prepareEntity("Classroom", true, function(){
 					prepareEntity("Schedule", true, function(){
 						$.get("/Class/getInfo/"+classId, function(response){
-							console.log(response);
+							//console.log(response);
 							$("#title-screen").html("<b>" +response.data[0].TXT_NAME + ": " + response.data[0].NUM_CLASS + " - " + response.data[0].TXT_SEMESTER + "</b>");
 						});
 					});
@@ -87,6 +88,50 @@ var openModal = function(entity){
     $("#modalTitle").html("Add " + entity);
     prepareEntitySelect(entity);
     $("#mainModal").modal("show");
+};
+
+var openModalLecture = function(){
+	fillInfoDays();
+	$("#modalLecture").modal("show");
+};
+
+var fillInfoDays = function(){
+    $("#info-modal-infoDays").html("");
+	$.blockUI();
+	$.get("/Schedule/getByClass/" + classId, function(response){
+		classSchedules.data = response.data;
+		string = "<b>Class Schedules:</b><br>";
+		$.each(response.data, function(index, value){
+			string+= value.TXT_DAY + " (" + value.DAT_BEGINNING + " - " + value.DAT_END + ")<br>";
+		});
+		$("#info-modal-infoDays").html(string);
+		$.unblockUI();
+	});
+};
+
+var createLectures = function(){
+	if($("#info-modal-from").val() == "" || $("#info-modal-from").val() == null || $("#info-modal-to").val() == "" || $("#info-modal-to").val() == null){
+        toastr.error("Please choose a Date.");
+        return;
+    }
+	if($("#info-modal-from").val() > $("#info-modal-to").val()){
+		toastr.error("Date From needs to be before Date To.");
+		return;
+	}
+	$.post("/Class/getAllEntity/Schedule", classSchedules, function(response, status){
+		responseArray = [];
+		$.each(response.data, function(index, value){
+			responseArray.push({scheduleClassId: value.ID, day: classSchedules.data[index].TXT_DAY});
+		});
+		classSchedules.arraySchedules = JSON.stringify(responseArray);
+		classSchedules.from = $("#info-modal-from").val();
+		classSchedules.to = $("#info-modal-to").val();
+		//console.log(classSchedules);
+		$.post("/Lecture/createMass", classSchedules, function(response, status){
+			toastr.success("Lectures created successfuly!");
+			return;
+		});
+	});
 };
 
 var prepareEntitySelect = function(entity){
@@ -184,6 +229,7 @@ var fillTable = function(entity, response){
 
 var closeModal = function(){
 	$("#mainModal").modal("hide");
+	$("#modalLecture").modal("hide");
 };
 
 var save = function(){

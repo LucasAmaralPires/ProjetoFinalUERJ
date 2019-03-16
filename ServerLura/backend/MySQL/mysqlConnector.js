@@ -19,5 +19,26 @@ module.exports = {
 				return callback(result);
 			});
 		});
+	},
+	executeMass: function(listSql, callback){
+		con = config.makeConnection();
+        con.connect(function(err) {
+            if (err){
+                console.log();
+                throw err;
+            }
+			for(i = 0; i<listSql.length ;i++){
+					con.query(listSql[i], function(erro, result, fields){
+					if (erro) throw erro;
+					console.log("realizado a seguinte query:");
+					console.log("[" + listSql[i] + "]");
+					console.log("Com a seguinte resposta:");
+					console.log(result)
+					console.log("===END TRANSACTION===\n");
+					return callback(result);
+				});
+			}
+			con.end();
+        });
 	}
 };

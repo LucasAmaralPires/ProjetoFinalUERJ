@@ -162,6 +162,10 @@
 				</div>
 				<button type="button" class="btn btn-outline-primary" style="margin-top:10px;" onclick="openModal('Schedule')">Add Schedule</button>
 			</div>
+
+			<div class="col-12">
+				<button type="button" class="btn btn-success" style="margin-top:10px;" onclick="openModalLecture()">Create Lectures</button>
+			</div>
 			
 			<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document"> 
@@ -184,6 +188,37 @@
 						<div class="modal-footer lura-modal-footer">
 							<button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
 							<button type="button" class="btn btn-outline-primary" onclick="save()">Save changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalLecture" tabindex="-1" role="dialog" aria-labelledby="modalLectureLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document"> 
+					<div class="modal-content">
+						<div class="modal-header lura-modal-header">
+							<h5 class="modal-title">Add Lectures for this Class</h5>
+							<button type="button" class="close" onclick="closeModal()">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body lura-modal-body">
+							<form>
+								<div class="form-group" id="info-modal-infoDays">
+								</div>
+								<div class="form-group col-6">
+									<label for="info-modal-from">Date From</label>
+									<input id="info-modal-from" type="date" class="form-control">
+								</div>
+								<div class="form-group col-6">
+									<label for="info-modal-to">Date To</label>
+									<input id="info-modal-to" type="date" class="form-control">
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer lura-modal-footer">
+							<button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
+							<button type="button" class="btn btn-outline-primary" onclick="createLectures()">Create Lectures</button>
 						</div>
 					</div>
 				</div>

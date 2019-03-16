@@ -90,6 +90,42 @@ router.post('/checkIfExists', function(req, res){
 	});
 });
 
+//Create Mass Lectures
+router.post('/createMass', function(req,res){
+	days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	req.body.arraySchedules = JSON.parse(req.body.arraySchedules);
+	data = req.body;
+	//console.log(data);
+	dateFrom = data.from.split("-");
+	dateFrom = new Date(dateFrom[0], dateFrom[1]-1, dateFrom[2], 0, 0, 0);
+	dateTo = data.to.split("-");
+    dateTo = new Date(dateTo[0], dateTo[1]-1, dateTo[2], 0, 0, 0);
+	var list = [];
+	while(dateFrom <= dateTo){
+		var i = 0;
+		for(i = 0;i<data.arraySchedules.length;i++){
+			dateTemp = new Date(dateFrom);
+			dateTemp = getNextDayOfWeek(dateTemp, days.indexOf(data.arraySchedules[i].day));
+			if(dateTemp <= dateTo){
+				dateTemp = dateTemp.getFullYear() + "-" + (dateTemp.getMonth()+1) + "-" + dateTemp.getDate();
+				list.push("INSERT INTO T_LECTURE (ID, ID_SCHEDULE_CLASS, DAT_DAY_OF_LECTURE) SELECT * FROM (SELECT 0, " + data.arraySchedules[i].scheduleClassId + ", '" + dateTemp + "') AS tmp WHERE NOT EXISTS (SELECT ID_SCHEDULE_CLASS, DAT_DAY_OF_LECTURE FROM T_LECTURE WHERE ID_SCHEDULE_CLASS = " + data.arraySchedules[i].scheduleClassId + " AND DAT_DAY_OF_LECTURE = '" + dateTemp + "') LIMIT 1;");
+			}
+		}
+		dateFrom.setDate(dateFrom.getDate() + 7);
+	}
+
+	mysql.executeMass(list, function(result){});
+
+	res.json({});
+	return;
+});
+
+function getNextDayOfWeek(date, dayOfWeek) {
+    var resultDate = new Date(date.getTime());
+    resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
+    return resultDate;
+}
+
 //Save to Database
 router.post('/save', function(req, res){
 	data = req.body;
