@@ -62,7 +62,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Colocar validacao do CRUD no comeco. Esta dando para fazer duas Class iguais.
   * [X] Quando entra na tela ViewClass de uma Class quase nao mostra nada sobre a class em si. Botar em cima de Student/Teacher informacoes da Class (Nome da materia, Num_Class, Semester) e botoes de acoes(nao sei ainda o que seria, pode ser que nao tenha botoes afinal das contas.)
   * [X] Checar o botao de ver entidade. Parece que nao fiz ainda. (Achei o botao inutil entao tirei ele)
-  * [ ] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
+  * [ ] (VERY HARD) Um botão na tela da Turma (Class) que crie aulas em massa entre duas datas, de acordo com os horarios (Schedules)
   * [ ] Ao apagar uma Turma (Class) tem que tambem apagar todas as aulas (Lectures) e consequentemente Presenca (Attendence).
   
 * Lecture
