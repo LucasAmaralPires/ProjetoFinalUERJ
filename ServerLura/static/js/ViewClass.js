@@ -118,6 +118,7 @@ var createLectures = function(){
 		toastr.error("Date From needs to be before Date To.");
 		return;
 	}
+	$.blockUI();
 	$.post("/Class/getAllEntity/Schedule", classSchedules, function(response, status){
 		responseArray = [];
 		$.each(response.data, function(index, value){
@@ -129,6 +130,8 @@ var createLectures = function(){
 		//console.log(classSchedules);
 		$.post("/Lecture/createMass", classSchedules, function(response, status){
 			toastr.success("Lectures created successfuly!");
+			$.unblockUI();
+			closeModal();
 			return;
 		});
 	});
