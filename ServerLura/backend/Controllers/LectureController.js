@@ -27,7 +27,7 @@ router.get('/getAll', function(req, res){
 //Get by id
 router.get('/get/:id', function(req, res){
 	var id = req.params.id;
-	string = "select l.ID, c.ID as ID_CLASS, l.DAT_DAY_OF_LECTURE, s.ID as ID_SUBJECT, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER, sch.TXT_DAY, sch.DAT_BEGINNING, sch.DAT_END"
+	string = "select l.ID, c.ID as ID_CLASS, l.DAT_DAY_OF_LECTURE, s.ID as ID_SUBJECT, s.TXT_NAME, c.NUM_CLASS, c.TXT_SEMESTER, sch.ID as ID_SCHEDULE sch.TXT_DAY, sch.DAT_BEGINNING, sch.DAT_END";
 	string+= " from T_LECTURE l, T_SCHEDULE_CLASS sc, T_CLASS c, T_SUBJECT s, T_SCHEDULE sch";
 	string+= " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID and c.ID_SUBJECT = s.ID and l.ID = " + id;
 	mysql.execute(string, function(result){
@@ -57,7 +57,7 @@ router.post('/getFilter', function(req, res){
         stringWhere += " and s.ID = "+ filter.classSubject;
     }
 	if(filter.numClass != null && filter.numClass != ""){
-        stringWhere += " and c.NUM_CLASS ="+ filter.numClass;
+        stringWhere += " and c.ID = "+ filter.numClass;
     }
 	if(filter.includePast != null && filter.includePast != "" && filter.includePast == 0){
         stringWhere += " and DATE(l.DAT_DAY_OF_LECTURE) >= DATE(NOW())";
@@ -84,6 +84,7 @@ router.post('/checkIfExists', function(req, res){
 	string+= " where l.ID_SCHEDULE_CLASS = sc.ID and sc.ID_CLASS = c.ID and sc.ID_SCHEDULE = sch.ID";
 	string+= " and c.ID_SUBJECT =" + lecture.classSubject;
 	string+= " and sc.ID_CLASS =" + lecture.numClass;
+	string+= " and sc.ID_SCHEDULE =" + lecture.schedule;
 	string+= " and DATE(l.DAT_DAY_OF_LECTURE) = DATE('" + lecture.date + "')";
 	mysql.execute(string, function(result){
 		res.json(result);
@@ -139,20 +140,27 @@ router.post('/save', function(req, res){
         res.json({success: false, data:"Class Number is missing."});
         return;
     }
+	if (data.schedule == null || data.schedule == ""){
+        res.json({success: false, data:"Schedule is missing."});
+        return;
+    }
 	if (data.date == null || data.date == ""){
         res.json({success: false, data:"Date is missing."});
         return;
     }
 
-	string = "select sc.ID from T_SCHEDULE_CLASS sc, T_SCHEDULE s, T_CLASS c where sc.ID_SCHEDULE = s.ID and sc.ID_CLASS = c.ID";
+	string = "select sc.ID from T_SCHEDULE_CLASS sc, T_SCHEDULE s, T_CLASS c "
+	string+= "where sc.ID_SCHEDULE = s.ID and sc.ID_CLASS = c.ID";
 	string+= " and c.ID_SUBJECT = " + data.classSubject;
 	string+= " and c.ID = " + data.numClass;
 	string+= " and s.TXT_DAY = '" + data.day + "'";
 	string+= ";"
 
+	//MUDAR AQUI, TEM ALGO DANDO ERRADO PRA VER SE TEM AULA OU NAO AQUIIIII
+
 	mysql.execute(string, function(value){
 		if(value.length < 1){
-			res.json({success: false, data:"This Class do not have lectures on this day."});
+			res.json({success: false, data:"This Class does not have lectures on this day."});
 			return;
 		}
 		else{

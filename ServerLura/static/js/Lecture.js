@@ -10,6 +10,7 @@ $(document).ready(function(){
 	getSubject(function(){
 		$("#div-numClass").hide();
 		$("#info-modal-numClass-toggle").hide();
+		$("#info-modal-infoDays-toggle").hide();
 		searchFilter(true);
 	});
 });
@@ -41,7 +42,7 @@ var searchFilter = function(restartPage){
 	filter.begin = $("#search-begin").val();
     filter.end = $("#search-end").val();
 	filter.classSubject = $("#search-classSubject").children("option:selected").val();
-	filter.numClass = $("#search-end").children("option:selected").val();
+	filter.numClass = $("#search-numClass").children("option:selected").val();
 	filter.includePast = $("#search-includePast").children("option:selected").val();
 	if(restartPage == true)
 		pagination.page = 1;
@@ -97,7 +98,7 @@ var openModal = function(id){
 				actualSubject = response.ID_SUBJECT;
 				actualClass = response.ID_CLASS;
 				date = response.DAT_DAY_OF_LECTURE.slice(0,10);
-				actualDate = date;
+				actualDate = response.ID_SCHEDULE;
 				$("#info-modal-date").val(date);
 				fillInfoDays();
 				$.unblockUI();
@@ -137,6 +138,7 @@ var fillTable = function(response){
 };
 
 var fillNumClass = function(divIdFrom, divIdTo, divToggle, callback){
+	$("#info-modal-infoDays-toggle").hide();
 	subjectId = $(divIdFrom).children("option:selected").val();
 	if(subjectId == ""){
 		$(divToggle).hide();
@@ -165,16 +167,18 @@ var fillNumClass = function(divIdFrom, divIdTo, divToggle, callback){
 var fillInfoDays = function(){
 	classId = $("#info-modal-numClass").children("option:selected").val();
     if(classId == ""){
+		$("#info-modal-infoDays-toggle").hide();
 		$("#info-modal-infoDays").html("");
     }
     else{
 		$.blockUI();
 		$.get("/Schedule/getByClass/" + classId, function(response){
-			string = "<b>Class Schedules:</b><br>";
-			$.each(response.data, function(index, value){
-				string+= value.TXT_DAY + " (" + value.DAT_BEGINNING + " - " + value.DAT_END + ")<br>";
-			});
-			$("#info-modal-infoDays").html(string);
+			string = "<option value=''>Choose one...</option>";
+            $.each(response.data, function(index, value){
+                string += "<option value='" + value.ID + "'>" + value.TXT_DAY + " (" + value.DAT_BEGINNING + " - " + value.DAT_END + ")</option>";
+            });
+            $("#info-modal-infoDays").html(string);
+			$("#info-modal-infoDays-toggle").show();
 			$.unblockUI();
 		});
 	}
@@ -198,14 +202,19 @@ var save = function(){
 	lecture.id = $("#info-modal-id").val();
 	lecture.classSubject = $("#info-modal-classSubject").children("option:selected").val();
 	lecture.numClass = $("#info-modal-numClass").children("option:selected").val();
+	lecture.schedule = $("#info-modal-infoDays").children("option:selected").val();
 	lecture.date = $("#info-modal-date").val();
 	dateInfo = $("#info-modal-date").val().split("-");
 	date = new Date(dateInfo[0], dateInfo[1]-1, dateInfo[2], 23, 59, 59);
 	lecture.day = days[date.getDay()];
 	$.blockUI();
+
+	console.log(lecture);
+	//MUDAR AQUI, TEM QUE VER O ERRO AO SIMPLESMNETE NAO BOTAR O HORARIO
+
 	$.post("/Lecture/checkIfExists", lecture, function(data, status){
 		alreadyExists = data.length > 0 ? true : false;
-		if(alreadyExists == true && actualClass != lecture.classSubject && actualSubject != lecture.numClass && actualDate != lecture.date){
+		if(alreadyExists == true && actualClass != lecture.classSubject && actualSubject != lecture.numClass && actualDate != lecture.schedule){
 			toastr.error("The Lecture already exists.");
 			$.unblockUI();
 			return;
