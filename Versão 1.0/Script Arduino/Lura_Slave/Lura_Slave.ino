@@ -15,7 +15,12 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 RF24 radio(12, 11);
 RF24Network network(radio);
 
+//////////////////////////////////////////////////////////////////////////
+//This String is the Classroom Number. Its unique for the Lura_Master!!!//
+//////////////////////////////////////////////////////////////////////////
 String classroom = "6000";
+//////////////////////////////////////////////////////////////////////////
+
 const uint16_t node01 = 01;
 const uint16_t this_node = 00;
 char st[20];
@@ -54,118 +59,84 @@ void setup()
  
 }
 
+void changeLED(int r, int g, int b)
+{
+  digitalWrite(red, r);
+  digitalWrite(green, g);
+  digitalWrite(blue, b);
+}
+
+void changeLCD(int start0, String text0, int start1, String text1)
+{
+  lcd.clear();
+  lcd.setCursor(start0, 0);
+  lcd.print(text0);
+  lcd.setCursor(start1, 1);
+  lcd.print(text1);
+}
+
 void check_code(char rec)
 {
   SPI.end();
-  if (rec == '1')
+  if (rec == '1') // Stand-by Mode. Stay Red until an action occurs
   {
-    digitalWrite(red, HIGH);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, LOW);
+    changeLED(1, 0, 0);
   }
   if (rec == '2')
   {
     digitalWrite(10, HIGH);
-    lcd.clear();
-    lcd.setCursor(5, 0);
-    lcd.print("ACESSO");
-    lcd.setCursor(4, 1);
-    lcd.print("LIBERADO");
-    digitalWrite(red, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(blue, LOW);
+    chabgeScreen(5, "ACESSO", 4, "LIBERADO");
+    changeLED(0, 1, 0);
     old_time = millis();
   }
   if (rec == '3')
   {
-    lcd.clear();
-    lcd.setCursor(6, 0);
-    lcd.write("MODO");
-    lcd.setCursor(4, 1);
-    lcd.write("PROFESSOR");
-    digitalWrite(red, LOW);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, HIGH);
+    changeScreen(6, "MODO", 4, "PROFESSOR");
+    changeLED(0, 0, 1);
     delay(3000);
     lcd.clear();
   }
   if (rec == '4')
   {
-    lcd.clear();
-    lcd.setCursor(6, 0);
-    lcd.print("CARTAO");
-    lcd.setCursor(5, 1);
-    lcd.print("INSERIDO");
-    digitalWrite(red, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(blue, LOW);
+    changeScreen(6, "CARTAO", 5, "INSERIDO");
+    changeLED(0, 1, 0);
     delay(2000);
-    digitalWrite(red, LOW);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, HIGH);
+    changeLED(0, 0, 1);
     ins_cartao = false;
     dig_mat = true;
     lcd.clear();
   }
   if (rec == '5')
   {
-    lcd.clear();
-    lcd.setCursor(6, 0);
-    lcd.print("ALUNO");
-    lcd.setCursor(5, 1);
-    lcd.print("APAGADO");
-    digitalWrite(red, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(blue, LOW);
+    changeScreen(6, "ALUNO", 5, "APAGADO");
+    changeLED(0, 1, 0);
     delay(2000);
-    digitalWrite(red, HIGH);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, LOW);
+    changeLED(1, 0, 0);
     lcd.clear();
   }
   if (rec == '6')
   {
-    lcd.clear();
-    lcd.setCursor(6, 0);
-    lcd.print("ALUNO");
-    lcd.setCursor(5, 1);
-    lcd.print("INSERIDO");
-    digitalWrite(red, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(blue, LOW);
+    changeScreen(6, "ALUNO", 5, "INSERIDO");
+    changeLED(0, 1, 0);
     delay(2000);
-    digitalWrite(red, HIGH);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, LOW);
+    changeLED(1, 0, 0);
     dig_mat = false;
     lcd.clear();
   }
   if (rec == '7')
   {
-    lcd.clear();
     ins_cartao = true;
-    lcd.setCursor(3, 0);
-    lcd.print("PROFESSOR");
-    lcd.setCursor(3, 1);
-    lcd.print("CONFIRMADO");
-    digitalWrite(red, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(blue, LOW);
+    changeScreen(6, "PROFESSOR", 4, "CONFIRMADO");
+    changeLED(0, 1, 0);
     delay(2000);
-    digitalWrite(red, LOW);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, HIGH);
+    changeLED(0, 0, 1);
     lcd.clear();
   }
   if (rec == '8')
   {
     digitalWrite(10, LOW);
-    lcd.clear();
     ins_cartao = true;
-    lcd.setCursor(5, 0);
-    lcd.print("ACESSO");
-    lcd.setCursor(5, 1);
-    lcd.print("NEGADO");
+    changeScreen(6, "ACESSO", 5, "NEGADO");
     delay(2000);
     lcd.clear();
   }
