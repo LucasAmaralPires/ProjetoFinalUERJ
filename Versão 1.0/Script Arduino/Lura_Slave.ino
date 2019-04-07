@@ -66,7 +66,7 @@ void changeLED(int r, int g, int b)
   digitalWrite(blue, b);
 }
 
-void changeLCD(int start0, String text0, int start1, String text1)
+void changeScreen(int start0, String text0, int start1, String text1)
 {
   lcd.clear();
   lcd.setCursor(start0, 0);
@@ -85,9 +85,9 @@ void check_code(char rec)
   if (rec == '2')
   {
     digitalWrite(10, HIGH);
-    chabgeScreen(5, "ACESSO", 4, "LIBERADO");
+    changeScreen(5, "ACESSO", 4, "LIBERADO");
     changeLED(0, 1, 0);
-    old_time = millis();
+    old_time = millis();  
   }
   if (rec == '3')
   {

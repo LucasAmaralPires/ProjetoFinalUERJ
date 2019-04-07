@@ -18,51 +18,104 @@ class Database:
                 except pymysql.DatabaseError:
                         pass
 
-        def executeQuery(self, query, errorMsg)
+        def executeInsertQuery(self,query,errorMsg):
                 db = self.connect()
                 if db != False:
                         try:
                                 curs = db.cursor()
                                 curs.execute(query)
-                                for reading in curs.fetchall():
-                                        for i in reading:
-                                                print (str(i) + "  ",end = "")
-                                        print()
+                                db.commit()
                         except pymysql.DatabaseError:
                                 print(errorMsg)
                         self.disconnect(db)
 
-        def executeQueries(self, queries, errorMsg)
+        def executeQuery(self, query, errorMsg):
+##                worked = False
+                result_row = None
                 db = self.connect()
                 if db != False:
                         try:
                                 curs = db.cursor()
-                                for query in queries
+                                curs.execute(query)
+                                db.commit()
+                                result_row = curs.fetchone()
+##                                if result_row:
+##                                        worked = True
+##                                for reading in curs.fetchall():
+##                                        for i in reading:
+##                                                print (str(i) + "  ",end = "")
+##                                        print()
+##                                worked = True
+                        except pymysql.DatabaseError:
+                                print(errorMsg)
+                        self.disconnect(db)
+                return result_row
+
+        def executeQueries(self, queries, errorMsg):
+                worked = False
+                db = self.connect()
+                if db != False:
+                        try:
+                                curs = db.cursor()
+                                for query in queries:
                                         curs.execute(query)
                                         for reading in curs.fetchall():
                                                 for i in reading:
                                                         print (str(i) + "  ",end = "")
                                                 print()
+                                worked = True
                         except pymysql.DatabaseError:
                                 print(errorMsg)
                         self.disconnect(db)
+                return worked
 
                
         def select_db(self, table):
                 query = "select * from " + table
                 errorMsg = "It wasn't possible to gather the data from table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                                 
         def insert_db(self,table,matriculation,ncard,name):
                 query = "insert into " + table + " values(0,'" + str(matriculation) + "'," + str(ncard) + ",'" + str(name) + "', now())"
                 errorMsg = "It wasn't possible to insert the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def delete_db_name(self,table,arg):
                 query = "delete from " + table + " where TXT_NAME = '" + str(arg) + "'"
                 errorMsg = "It wasn't possible to delete the " + table[2:] + " from the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
+        def class_happening(self,classroom):
+                str_select = "select l.ID, l.DAT_DAY_OF_LECTURE, c.NUM_CLASS, c.ID, c.TXT_SEMESTER, cr.TXT_ROOM "
+                str_from = "from T_LECTURE l left join T_SCHEDULE_CLASS sc on l.ID_SCHEDULE_CLASS = sc.ID left join T_SCHEDULE s on sc.ID_SCHEDULE = s.ID left join T_CLASS c on sc.ID_CLASS = c.ID left join T_CLASSROOM_CLASS cc ON cc.ID_CLASS = sc.ID_CLASS left join T_CLASSROOM cr ON cc.ID_CLASSROOM = cr.ID "
+                str_where = "where DATE(l.DAT_DAY_OF_LECTURE) = DATE(NOW()) AND cr.TXT_ROOM = '" + classroom + "';"
+                query = str_select + str_from + str_where
+                errorMsg = "There is no class in this room at this time"
+                return self.executeQuery(query, errorMsg)
+                
+        def student_in_class(self, clas_s,value):
+                str_select = "select c.ID, c.NUM_CLASS, c.TXT_SEMESTER,	s.ID, s.TXT_NAME "
+                str_from = "from T_SCHEDULE_CLASS sc left join T_CLASS c on sc.ID_CLASS = c.ID left join T_STUDENT_CLASS stc ON stc.ID_CLASS = sc.ID_CLASS left join T_STUDENT s ON stc.ID_STUDENT = s.ID "
+                str_where = "where (s.NUM_MATRICULATION = '" + value + "' OR s.NUM_CARD = '" + value + "') AND c.ID = '" + str(clas_s[3]) + "' "
+                str_limit = "limit 1;"
+                errorMsg = "The student is not enrolled in this class"
+                query = str_select + str_from + str_where + str_limit
+                print (query)
+                return self.executeQuery(query,errorMsg)
+
+        def mark_attendance(self,classroom,value):
+                result = None
+                result_lec = self.class_happening(classroom)
+                if result_lec:
+                        result_student = self.student_in_class(result_lec,value)
+                        print(result_student)
+                        if result_student:
+                                query = "INSERT INTO T_ATTENDANCE VALUES (0," + str(result_lec[0]) + "," + str(result_student[3]) + ",NOW());"
+                                errorMsg = "The student is not enrolled in this class"
+                                self.executeInsertQuery(query, errorMsg)
+                                return True
+                return False
+        
         def validate_teacher(self,classroom,value):
                 str_select = "select l.ID, l.DAT_DAY_OF_LECTURE, sc.ID_CLASS, te.NUM_CARD, te.NUM_MATRICULATION,s.DAT_END "
                 str_from = "from T_LECTURE l, T_SCHEDULE_CLASS sc, T_SCHEDULE s, T_TEACHER_CLASS tc, T_TEACHER te, T_CLASSROOM c, T_CLASSROOM_CLASS cc "
@@ -70,60 +123,64 @@ class Database:
                 str_order_limit = "order by s.DAT_END limit 1;"
                 query = str_select + str_from + str_where + str_order_limit
                 errorMsg = "It wasn't possible to validate teacher"
-                executeQuery(self, query, errorMsg)
+                result = self.executeQuery(query, errorMsg)
+                if result:
+                        return True
+                else:
+                        return False
                 
         def delete_db_matriculation(self,table,arg):
                 query = "delete from " + table + " where NUM_MATRICULATION = '" + str(arg) + "'"
                 errorMsg = "It wasn't possible to delete the " + table[2:] + " from the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def delete_db_card(self,table,arg):
                 query = "delete from " + table + " where NUM_CARD = " + str(arg)
                 errorMsg = "It wasn't possible to delete the " + table[2:] + " from the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_name_name(self,table,new,old):
                 query = "update " + table + " set TXT_NAME = '" + str(new) + "' where TXT_NAME = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_name_matriculation(self,table,new,old):
                 query = "update " + table + " set TXT_NAME = '" + str(new) + "' where NUM_MATRICULATION = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_name_card(self,table,new,old):
                 query = "update " + table + " set TXT_NAME = '" + str(new) + "' where NUM_CARD = " + str(old)
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                         
         def update_db_matriculation_matriculation(self,table,new,old):
                 query = "update " + table + " set NUM_MATRICULATION = '" + str(new) + "' where NUM_MATRICULATION = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_matriculation_name(self,table,new,old):
                 query = "update " + table + " set NUM_MATRICULATION = '" + str(new) + "' where TXT_NAME = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                         
         def update_db_matriculation_card(self,table,new,old):
                 query = "update " + table + " set NUM_MATRICULATION = '" + str(new) + "' where NUM_CARD = " + str(old)
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_card_card(self,table,new,old):
                 query = "update " + table + " set NUM_CARD = " + str(arg1) + " where NUM_CARD = " + str(arg2)
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
         def update_db_card_name(self,table,new,old):
                 query = "update " + table + " set NUM_CARD = " + str(arg1) + " where TXT_NAME = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
 
         def update_db_card_matriculation(self,table,new,old):
                 query = "update " + table + " set NUM_CARD = " + str(arg1) + " where NUM_MATRICULATION = '" + str(old) + "'"
                 errorMsg = "It wasn't possible to update the " + table[2:] + " in the table"
-                executeQuery(self, query, errorMsg)
+                return self.executeQuery(query, errorMsg)
                 
