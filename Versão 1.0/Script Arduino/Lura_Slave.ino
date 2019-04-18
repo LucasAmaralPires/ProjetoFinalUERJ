@@ -9,6 +9,7 @@
 #define green 46
 #define SS_PIN 53
 #define RST_PIN 38
+#define tranca 10
 
 LiquidCrystal lcd(48, 49, 50, 51, 52, 53);
 MFRC522 mfrc522(SS_PIN, RST_PIN);
@@ -35,9 +36,8 @@ void setup()
   cont_di = 0;
   ins_cartao = false;
   dig_mat = false;
-  pinMode(red, OUTPUT);
-  pinMode(blue, OUTPUT);
-  pinMode(green, OUTPUT);
+  changeLED(1,0,0);
+  changeScreen(6,"LURA",0,"");
   //Pinos ligados aos pinos 1, 2, 3 e 4 do teclado - Linhas
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -48,12 +48,11 @@ void setup()
   pinMode(2, INPUT);
   pinMode(8, INPUT);
   mfrc522.PCD_Init();   // Inicia MFRC522
-  pinMode(10, OUTPUT);
-  digitalWrite(10, LOW);
+  pinMode(tranca, OUTPUT);
   Serial.begin(9600);
   radio.begin();
   network.begin(90, this_node);
-  digitalWrite(red, HIGH);
+  digitalWrite(tranca, LOW);
   Serial.println("Aguardando acionamento das teclas ou leitura de cartão...");
   Serial.println();
  
@@ -61,6 +60,12 @@ void setup()
 
 void changeLED(int r, int g, int b)
 {
+  if(r) pinMode(red,INPUT);
+  else pinMode(red,OUTPUT);
+  if(g) pinMode(green,INPUT);
+  else pinMode(green,OUTPUT);
+  if(b) pinMode(blue,INPUT);
+  else pinMode(blue,OUTPUT);
   digitalWrite(red, r);
   digitalWrite(green, g);
   digitalWrite(blue, b);
@@ -84,7 +89,7 @@ void check_code(char rec)
   }
   if (rec == '2')
   {
-    digitalWrite(10, HIGH);
+    digitalWrite(tranca, HIGH);
     changeScreen(5, "ACESSO", 4, "LIBERADO");
     changeLED(0, 1, 0);
     old_time = millis();  
@@ -134,7 +139,7 @@ void check_code(char rec)
   }
   if (rec == '8')
   {
-    digitalWrite(10, LOW);
+    digitalWrite(tranca, LOW);
     ins_cartao = true;
     changeScreen(6, "ACESSO", 5, "NEGADO");
     delay(2000);
