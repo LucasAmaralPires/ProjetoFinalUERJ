@@ -18,7 +18,7 @@ class Database:
                 except pymysql.DatabaseError:
                         pass
 
-        def executeInsertQuery(self,query,errorMsg):
+        def executeInsertDeleteQuery(self,query,errorMsg):
                 db = self.connect()
                 if db != False:
                         try:
@@ -104,7 +104,6 @@ class Database:
                 return self.executeQuery(query,errorMsg)
 
         def mark_attendance(self,classroom,value):
-                result = None
                 result_lec = self.class_happening(classroom)
                 if result_lec:
                         result_student = self.student_in_class(result_lec,value)
@@ -112,8 +111,9 @@ class Database:
                         if result_student:
                                 query = "INSERT INTO T_ATTENDANCE VALUES (0," + str(result_lec[0]) + "," + str(result_student[3]) + ",NOW());"
                                 errorMsg = "The student is not enrolled in this class"
-                                self.executeInsertQuery(query, errorMsg)
+                                self.executeInsertDeleteQuery(query, errorMsg)
                                 return True
+                        return False
                 return False
         
         def validate_teacher(self,classroom,value):
@@ -128,6 +128,60 @@ class Database:
                         return True
                 else:
                         return False
+
+        def insert_delete_student_class(self,classroom,value):
+                result_lec = self.class_happening(classroom)
+                if result_lec:
+                        result_student = self.student_in_class(result_lec,value)
+                        print("E:  ",end = '')
+                        print(result_student)
+                        if result_student:
+                                str_delete = "DELETE FROM T_STUDENT_CLASS "
+                                str_where = "WHERE T_STUDENT_CLASS.ID_STUDENT = " + str(result_student[3]) + " AND T_STUDENT_CLASS.ID_CLASS = " + str(result_student[0]) + ";"
+                                query = str_delete + str_where
+                                errorMsg = "it wasn't possible to delete student"
+                                self.executeInsertDeleteQuery(query,errorMsg)
+                                return "3\n"
+                        else: 
+                                query = "INSERT INTO T_STUDENT_CLASS VALUES (0," + str(result_lec[3]) + "," + str(result_lec[3]) + ",NOW());"
+                                errorMsg = "It wasn't possible to insert student"
+                                self.executeInsertDeleteQuery(query,errorMsg)
+                                return "4\n"                              
+                        return "8\n"
+                return "8\n"
+                
+
+##        def insert_student_class(self,classroom,value):
+##                result_lec = self.class_happening(classroom)
+##                if result_lec:
+##                        result_student = self.student_in_class(result_lec,value)
+##                        print(result_student)
+##                        if result_student:
+##                                query = "INSERT INTO T_STUDENT_CLASS VALUES (0," + str(result_student[3]) + "," + str(result_student[0]) + ",NOW());"
+##                                errorMsg = "It wasn't possible to insert student"
+##                                self.executeInsertDeleteQuery(query,errorMsg)
+##                                return True
+##                        return False
+##                return False
+
+        def add_student_database(self,mat,card):
+                query = "INSERT INTO T_STUDENT VALUES (0,'" + mat + "','" + card + "','',NULL);"
+                errorMsg = "It wasnt's possible to insert student"
+                self.executeInsertDeleteQuery(query,errorMsg)
+
+        def validate_card(self,value):
+                query = "Select * from T_STUDENT WHERE NUM_CARD = '" + value + "';"
+                errorMsg = "It wasn't possible to validate card"
+                result = self.executeQuery(query, errorMsg)
+                if result:
+                        return True
+                else:
+                        return False
+
+        def link_card_matriculation(self,mat,card):
+                query = "UPDATE T_STUDENT SET NUM_CARD = '" + card + "' WHERE NUM_MATRICULATION = '" + mat + "';"
+                errorMsg = "It wasnt's possible to update student data"
+                self.executeInsertDeleteQuery(query,errorMsg)                
                 
         def delete_db_matriculation(self,table,arg):
                 query = "delete from " + table + " where NUM_MATRICULATION = '" + str(arg) + "'"
