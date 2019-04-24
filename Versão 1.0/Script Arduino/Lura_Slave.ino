@@ -22,22 +22,23 @@ RF24Network network(radio);
 String classroom = "6000";
 //////////////////////////////////////////////////////////////////////////
 
-const uint16_t node01 = 01;
-const uint16_t this_node = 00;
+enum state {open_door = '1', teac_mode = '2', student_erased = '3', student_added = '4', teac_ver = '5', close_door = '6', insert_mat = '7', error = '8'};
+const uint16_t master = 00;
+const uint16_t this_node = 01;
 char st[20];
 char digt[15];
 int cont_di;
 long old_time, new_time;
-bool ins_cartao, dig_mat;
+//bool ins_cartao, dig_mat;
 
 void setup()
 {
   lcd.begin(16, 2);
   cont_di = 0;
-  ins_cartao = false;
-  dig_mat = false;
-  changeLED(1,0,0);
-  changeScreen(6,"LURA",0,"");
+ // ins_cartao = false;
+//  dig_mat = false;
+  changeLED(1, 0, 0);
+  changeScreen(6, "LURA", 0, "");
   //Pinos ligados aos pinos 1, 2, 3 e 4 do teclado - Linhas
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -55,17 +56,17 @@ void setup()
   digitalWrite(tranca, LOW);
   Serial.println("Aguardando acionamento das teclas ou leitura de cartão...");
   Serial.println();
- 
+
 }
 
 void changeLED(int r, int g, int b)
 {
-  if(r) pinMode(red,INPUT);
-  else pinMode(red,OUTPUT);
-  if(g) pinMode(green,INPUT);
-  else pinMode(green,OUTPUT);
-  if(b) pinMode(blue,INPUT);
-  else pinMode(blue,OUTPUT);
+  if (r) pinMode(red, INPUT);
+  else pinMode(red, OUTPUT);
+  if (g) pinMode(green, INPUT);
+  else pinMode(green, OUTPUT);
+  if (b) pinMode(blue, INPUT);
+  else pinMode(blue, OUTPUT);
   digitalWrite(red, r);
   digitalWrite(green, g);
   digitalWrite(blue, b);
@@ -83,35 +84,21 @@ void changeScreen(int start0, String text0, int start1, String text1)
 void check_code(char rec)
 {
   SPI.end();
-  if (rec == '1') // Stand-by Mode. Stay Red until an action occurs
-  {
-    changeLED(1, 0, 0);
-  }
-  if (rec == '2')
+  delay(10);
+  if (rec == open_door) // Stand-by Mode. Stay Red until an action occurs
   {
     digitalWrite(tranca, HIGH);
     changeScreen(5, "ACESSO", 4, "LIBERADO");
     changeLED(0, 1, 0);
-    old_time = millis();  
+    old_time = millis();
   }
-  if (rec == '3')
+  else if (rec == teac_mode)
   {
-    changeScreen(6, "MODO", 4, "PROFESSOR");
+    changeScreen(0, "MODO", 0, "PROFESSOR");
     changeLED(0, 0, 1);
-    delay(3000);
     lcd.clear();
   }
-  if (rec == '4')
-  {
-    changeScreen(6, "CARTAO", 5, "INSERIDO");
-    changeLED(0, 1, 0);
-    delay(2000);
-    changeLED(0, 0, 1);
-    ins_cartao = false;
-    dig_mat = true;
-    lcd.clear();
-  }
-  if (rec == '5')
+  else if (rec == student_erased)
   {
     changeScreen(6, "ALUNO", 5, "APAGADO");
     changeLED(0, 1, 0);
@@ -119,29 +106,45 @@ void check_code(char rec)
     changeLED(1, 0, 0);
     lcd.clear();
   }
-  if (rec == '6')
+  else if (rec == student_added)
   {
     changeScreen(6, "ALUNO", 5, "INSERIDO");
     changeLED(0, 1, 0);
     delay(2000);
     changeLED(1, 0, 0);
-    dig_mat = false;
+//    dig_mat = false;
     lcd.clear();
   }
-  if (rec == '7')
+  if (rec == teac_ver)
   {
-    ins_cartao = true;
+//    ins_cartao = true;
     changeScreen(6, "PROFESSOR", 4, "CONFIRMADO");
     changeLED(0, 1, 0);
     delay(2000);
     changeLED(0, 0, 1);
-    lcd.clear();
+    changeScreen(3,"PASSE O",4,"CARTAO");
   }
-  if (rec == '8')
+  if (rec == close_door)
   {
     digitalWrite(tranca, LOW);
-    ins_cartao = true;
+//    ins_cartao = true;
     changeScreen(6, "ACESSO", 5, "NEGADO");
+    changeLED(1, 0, 0);
+    delay(2000);
+    lcd.clear();
+  }
+  if (rec == insert_mat)
+  {
+    changeScreen(3,"INSIRA A",4,"MATRICULA");
+    changeLED(0, 0, 1);
+    delay(2000);
+  }
+  if (rec == error)
+  {
+    digitalWrite(tranca, LOW);
+//    ins_cartao = true;
+    changeScreen(6, "ERROR", 0, "");
+    changeLED(1, 0, 0);
     delay(2000);
     lcd.clear();
   }
@@ -154,7 +157,7 @@ void wireless_write(String env)
   text.toCharArray(send_t, 24);
   SPI.begin();
   network.update();
-  RF24NetworkHeader header(node01);
+  RF24NetworkHeader header(master);
   Serial.println("Sending message.");
   bool ok = network.write(header, send_t, 24);
   Serial.println("Message sent.");
@@ -251,6 +254,7 @@ void imprime_linha_coluna(int x, int y)
           else
           {
             Serial.println("!");
+            wireless_write("!");
           }
           break;
       }
@@ -319,26 +323,26 @@ void loop()
   wireless_read();
   for (int ti = 3; ti < 7; ti++)
   {
-    if (dig_mat == false)
-    {
+//    if (dig_mat == false)
+//    {
       read_card();
-    }
-    if (ins_cartao == false)
-    {
+//    }
+//    if (ins_cartao == false)
+//    {
       read_matrix(ti);
-    }
+//    }
   }
   delay(10);
-  /*      if((!digitalRead(red)) && (digitalRead(green)) && ((new_time - old_time)>5000))
+        if((!digitalRead(red)) && (digitalRead(green)) && ((new_time - old_time)>5000))
         {
           digitalWrite(10,LOW);
           digitalWrite(red,HIGH);
           digitalWrite(green,LOW);
         }
-        if(digitalRead(red))
+    /*    if(digitalRead(red))
         {
-          ins_cartao = false;
-          dig_mat = false;
+//          ins_cartao = false;
+//          dig_mat = false;
           lcd.clear();
         }*/
 }

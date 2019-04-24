@@ -142,10 +142,13 @@ class Database:
                                 errorMsg = "it wasn't possible to delete student"
                                 self.executeInsertDeleteQuery(query,errorMsg)
                                 return "3\n"
-                        else: 
-                                query = "INSERT INTO T_STUDENT_CLASS VALUES (0," + str(result_lec[3]) + "," + str(result_lec[3]) + ",NOW());"
+                        else:
+                                query1 = "select s.ID from T_STUDENT s where (NUM_CARD = '" + value + "' OR NUM_MATRICULATION = '" + value + "');"
+                                errorMsg = "There is no student with that code in the database"
+                                result = self.executeQuery(query1,errorMsg)
+                                query2 = "INSERT INTO T_STUDENT_CLASS VALUES (0," + str(result[0]) + "," + str(result_lec[3]) + ",NOW());"
                                 errorMsg = "It wasn't possible to insert student"
-                                self.executeInsertDeleteQuery(query,errorMsg)
+                                self.executeInsertDeleteQuery(query2,errorMsg)
                                 return "4\n"                              
                         return "8\n"
                 return "8\n"

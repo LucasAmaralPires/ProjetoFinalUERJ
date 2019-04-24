@@ -4,14 +4,14 @@
 
 RF24 radio(12, 11);              // nRF24L01 (CE,CSN)
 RF24Network network(radio);      // Include the radio in the network
-const uint16_t this_node = 01;   // Address of our node in Octal format ( 04,031, etc)
+const uint16_t node01 = 01;   // Address of our node in Octal format ( 04,031, etc)
 const uint16_t master = 00;
 
 void setup()
 {
   Serial.begin(9600);
   radio.begin();
-  network.begin(90, this_node); //(channel, node address)
+  network.begin(90, master); //(channel, node address)
 }
 
 void wireless_write(String env)
@@ -21,7 +21,7 @@ void wireless_write(String env)
   text.toCharArray(send_t, 24);
   SPI.begin();
   network.update();
-  RF24NetworkHeader header(master);
+  RF24NetworkHeader header(node01);
  // Serial.println("Sending message.");
   bool ok = network.write(header, send_t, 24);
  // Serial.println("Message sent.");
