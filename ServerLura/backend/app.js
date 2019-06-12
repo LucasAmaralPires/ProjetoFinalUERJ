@@ -38,8 +38,8 @@ app.use('/Class', ClassController);
 const LectureController = require('./Controllers/LectureController.js');
 app.use('/Lecture', LectureController);
 
-//const AttendenceController = require('./Controllers/AttendenceController.js');
-//app.use('/Attendence', AttendenceController);
+const AttendenceController = require('./Controllers/AttendenceController.js');
+app.use('/Attendence', AttendenceController);
 
 //CONTROLLERS END
 

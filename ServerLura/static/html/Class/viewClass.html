@@ -58,6 +58,7 @@
 								<th style="width: 45%">Name</th>
 								<th style="width: 45%">Matriculation</th>
 								<th style="width: 5%"></th>
+								<th style="width: 5%"></th>
 							</tr>
 						</thead>
 						<tbody id="tbody-student">
@@ -219,6 +220,32 @@
 						<div class="modal-footer lura-modal-footer">
 							<button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
 							<button type="button" class="btn btn-outline-primary" onclick="createLectures()">Create Lectures</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="modalAttendence" tabindex="-1" role="dialog" aria-labelledby="modalAttendenceLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document"> 
+					<div class="modal-content">
+						<div class="modal-header lura-modal-header">
+							<h5 class="modal-title" id="modalAttendenceTitle">Attendence</h5>
+							<button type="button" class="close" onclick="closeModal()">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body lura-modal-body">
+							<table class="table table-striped table-bordered" style="table-layout: fixed;">
+								<thead class="thead-dark">
+									<tr>
+										<th style="width: 45%">Date</th>
+									</tr>
+								</thead>
+								<tbody id="tbodyAttendence">
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer lura-modal-footer">
+							<button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
 						</div>
 					</div>
 				</div>

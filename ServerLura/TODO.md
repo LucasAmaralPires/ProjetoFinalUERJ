@@ -64,6 +64,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   * [X] Checar o botao de ver entidade. Parece que nao fiz ainda. (Achei o botao inutil entao tirei ele)
   * [X] (VERY HARD) Ao criar uma turma (Class), criar no banco todas as aulas (Lecture) do semestre (seria dito provavelmente na modal da Class uma data inicio e uma data fim. Depois iria criar de acordo com a schedule.)
   * [ ] Ao apagar uma Turma (Class) tem que tambem apagar todas as aulas (Lectures) e consequentemente Presenca (Attendence).
+  * [X] Conseguir ver a presenca (Attendance) de um aluno especifico.
   
 * Lecture
   * [X] Replicar CRUD generico e adaptar
@@ -76,7 +77,7 @@ Esse arquivo tem o intuito de mostrar o que falta para ser realizado no Web serv
   
 * Attendence
   Attendence sera a unica Entity que nao tera uma CRUD. Ela sera populada pelo Arduino e sera vista com um botao em cada aula (Lecture).
-  * [ ] Botar na tela das aulas (Lecture) as attendences de todos os alunos que apareceram nas aulas PASSADAS (ou que estao acontecendo).
+  * [X] Botar na tela das aulas (Lecture) as attendences de todos os alunos que apareceram nas aulas PASSADAS (ou que estao acontecendo).
   * [X] Remover o link no Menu principal Attendence (ele nao tera um CRUD) em todas as telas.
 
 ### Backend

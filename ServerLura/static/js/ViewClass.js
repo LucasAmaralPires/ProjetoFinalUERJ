@@ -184,6 +184,8 @@ var fillTable = function(entity, response){
 		if(entity == "Student" || entity == "Teacher"){
 			string += "<td>" + entityInfo.TXT_NAME + "</td>";
 			string += "<td>" + entityInfo.NUM_MATRICULATION + "</td>";
+			if(entity == "Student")
+				string += "<td><img style='cursor:pointer;' onclick ='seeAttendence("+ classId + "," + entityInfo.ID +")' src='../../icons/document.svg' alt='Delete' height='16' width='16'></td>";
 		}
 		else if (entity == "Classroom"){
 			isRestrict = entityInfo.FL_RESTRICT == 1 ? "Yes" : "No";
@@ -233,6 +235,7 @@ var fillTable = function(entity, response){
 var closeModal = function(){
 	$("#mainModal").modal("hide");
 	$("#modalLecture").modal("hide");
+	$("#modalAttendence").modal("hide");
 };
 
 var save = function(){
@@ -279,6 +282,21 @@ var remove = function(entity, entityId){
 		};
 	});
 };
+
+var seeAttendence = function(idClass, idStudent){
+	$.get("/Attendence/getByClassStudent/" + idClass + "/"+idStudent, function(response){
+		string="";
+		for(i=0;i<response.data.length;i++){
+			if(response.success == true){
+				string+="<tr>"
+				string+="<td>"+response.data[i].DAT_DAY_OF_LECTURE.slice(0,10)+"</td>";
+				string+="</tr>"
+			}
+		};
+		$("#tbodyAttendence").html(string);
+		$("#modalAttendence").modal("show");
+	});
+}
 
 var previousPage = function(entity){
 	if(entity == "Student" && pagination.student.page != 1)

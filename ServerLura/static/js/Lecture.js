@@ -1,5 +1,6 @@
 var pagination = {page: 1, dataPerPage: 15};
 var totalPages = 0;
+var students = [];
 var subjects = [];
 var actualClass = null;
 var actualSubject = null;
@@ -16,11 +17,14 @@ $(document).ready(function(){
 });
 
 var getSubject = function(callback){
-    $.get("/Subject/getAll", function(response){
-        subjects = response.data;
-        prepareSubjectSelect();
-        callback();
-    });
+	$.get("/Student/getAll", function(response){
+		students = response.data;
+		$.get("/Subject/getAll", function(response){
+			subjects = response.data;
+			prepareSubjectSelect();
+			callback();
+		});
+	});
 };
 
 var prepareSubjectSelect = function(){
@@ -90,7 +94,6 @@ var openModal = function(id){
 				return;
 			}
 			response = response.data[0];
-			console.log(response);
 			$("#info-modal-id").val(response.ID);
 			$("#info-modal-classSubject").val(response.ID_SUBJECT);
 			fillNumClass("#info-modal-classSubject", "#info-modal-numClass", "#info-modal-numClass-toggle", function(){
@@ -186,6 +189,7 @@ var fillInfoDays = function(){
 
 var closeModal = function(){
 	$("#mainModal").modal("hide");
+	$("#modalAttendence").modal("hide");
 };
 
 var clearModal = function(){
@@ -248,7 +252,19 @@ var remove = function(id){
 };
 
 var seeAttendence = function(id){
-	toastr.info("Under Construction.");
+	$.get("/Attendence/getByLecture/" + id, function(response){
+		string="";
+		for(i=0;i<response.data.length;i++){
+			student = students.find(x => x.ID === response.data[i].ID_STUDENT);
+			if(student !== undefined){
+				string+="<tr>"
+				string+="<td>"+student.TXT_NAME+" ("+student.NUM_MATRICULATION+")</td>";
+				string+="</tr>"
+			}
+		};
+		$("#tbodyAttendence").html(string);
+		$("#modalAttendence").modal("show");
+	});
 }
 
 var previousPage = function(){
